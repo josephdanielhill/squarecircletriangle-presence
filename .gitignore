@@ -1,0 +1,6 @@
+npm/data/
+npm/letsencrypt/
+node_modules/
+.env
+*.log
+.DS_Store

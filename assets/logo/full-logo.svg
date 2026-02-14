@@ -1,0 +1,10 @@
+<svg width="400" height="150" viewBox="0 0 400 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Square -->
+<rect x="20" y="10" width="100" height="100" fill="#828282"/>
+
+<!-- Circle -->
+<circle cx="200" cy="60" r="50" fill="#696969"/>
+
+<!-- Triangle -->
+<polygon points="330,10 380,110 280,110" fill="#4a4a4a"/>
+</svg>
