@@ -114,22 +114,57 @@ mkdir -p /opt/squarecircletriangle
 cd /opt/squarecircletriangle
 ```
 
-#### Step 2: Clone Repository via HTTPS
+#### Step 2a: Create a GitHub Personal Access Token (First Time Only)
+
+**Important**: GitHub no longer accepts passwords for Git operations. You must use a personal access token.
+
+1. On your **local machine**, go to: https://github.com/settings/tokens/new
+2. Fill in the form:
+   - **Token name**: `squarecircletriangle-deployment`
+   - **Expiration**: Select `90 days` (or your preference)
+   - **Scopes**: Check only `repo` (this gives full control of private repositories)
+3. Click **Generate token**
+4. **Copy the token immediately** - you won't see it again!
+5. Save it somewhere safe (you'll use it on Hetzner)
+
+**Example token format**: `ghp_1234567890ABCDEFGHIJKLMNOPQRSTUVWxyz`
+
+#### Step 2b: Clone Repository via HTTPS with Token
+
+On your Hetzner server, run:
 ```bash
-git clone https://github.com/your-username/squarecircletriangle-presence.git /opt/squarecircletriangle
+git clone https://github.com/josephdanielhill/squarecircletriangle-presence.git /opt/squarecircletriangle
 cd /opt/squarecircletriangle
 ```
 
-You will be prompted to enter your GitHub credentials:
-- **Username**: Your GitHub username
-- **Password**: Your GitHub personal access token (not your password)
+When prompted:
+- **Username**: `josephdanielhill` (your GitHub username)
+- **Password**: Paste your personal access token (from Step 2a)
 
-If you don't have a personal access token yet, create one:
-1. Go to https://github.com/settings/tokens
-2. Click "Generate new token"
-3. Select scopes: `repo` (full control of private repositories)
-4. Click "Generate token" and copy it
-5. Paste it as your password when prompted
+**Expected output** (if successful):
+```
+Cloning into '/opt/squarecircletriangle'...
+remote: Enumerating objects: 25, done.
+remote: Counting objects: 100% (25/25), done.
+remote: Compressing objects: 100% (20/20), done.
+Receiving objects: 100% (25/25), done.
+```
+
+#### Alternative: Store Token to Avoid Repeated Prompts
+
+You can store your credentials locally on the server (optional but convenient):
+
+```bash
+# This will prompt for username and token once, then cache them
+git config --global credential.helper store
+
+# Try cloning again
+git clone https://github.com/josephdanielhill/squarecircletriangle-presence.git /opt/squarecircletriangle
+
+# It will ask for credentials, enter them, and they'll be saved
+```
+
+**Security Note**: This stores credentials in `~/.git-credentials`. Only do this on your personal Hetzner server.
 
 #### Step 3: Verify Repository Contents
 ```bash
@@ -747,20 +782,41 @@ cp -r /opt/squarecircletriangle/npm/letsencrypt /backup/
 
 ### GitHub Clone Issues
 
-#### Authentication Failed (HTTPS)
+#### Authentication Failed - "Invalid username or token"
+```bash
+# Full Error:
+# remote: Invalid username or token. Password authentication is not supported for Git operations.
+# fatal: Authentication failed for 'https://github.com/...'
+
+# Solution: GitHub requires a personal access token, NOT your password
+
+# Step 1: Create a personal access token (on your local machine, NOT on Hetzner)
+#   - Go to: https://github.com/settings/tokens/new
+#   - Token name: squarecircletriangle-deployment
+#   - Expiration: 90 days
+#   - Scopes: Check "repo" only
+#   - Click "Generate token"
+#   - COPY the token immediately (you won't see it again!)
+
+# Step 2: Try cloning again on Hetzner with the token
+git clone https://github.com/josephdanielhill/squarecircletriangle-presence.git /opt/squarecircletriangle
+
+# When prompted:
+# Username: josephdanielhill
+# Password: [Paste your personal access token here]
+```
+
+#### Authentication Failed - "fatal: could not read Username"
 ```bash
 # Error: "fatal: could not read Username for 'https://github.com'"
-# Solution: Use a personal access token instead of password
+# Solution: This usually means credentials weren't cached
 
-# 1. Create a personal access token:
-#    - Go to https://github.com/settings/tokens
-#    - Click "Generate new token"
-#    - Select scopes: repo
-#    - Copy the token
+# Option 1: Store credentials for future use
+git config --global credential.helper store
 
-# 2. Try cloning again - use token as password
-git clone https://github.com/your-username/squarecircletriangle-presence.git
-# When prompted for password, paste the token
+# Option 2: Clone again
+git clone https://github.com/josephdanielhill/squarecircletriangle-presence.git /opt/squarecircletriangle
+# Enter credentials when prompted
 ```
 
 #### Permission Denied (SSH)
