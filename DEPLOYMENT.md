@@ -92,6 +92,33 @@ chmod +x /usr/local/bin/docker-compose
 docker-compose --version
 ```
 
+### Update Docker Compose (If You Get Version Errors)
+
+If you get an error like "client version 1.43 is too old", you need to update Docker Compose:
+
+```bash
+# Check current Docker Compose version
+docker-compose --version
+
+# Download the latest Docker Compose
+curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+# Or download a specific version (example: v2.28.0)
+curl -L "https://github.com/docker/compose/releases/download/v2.28.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+# Make it executable
+chmod +x /usr/local/bin/docker-compose
+
+# Verify the update
+docker-compose --version
+
+# Restart Docker
+systemctl restart docker
+
+# Try docker-compose commands again
+docker-compose ps
+```
+
 ### Add Root User to Docker Group (Optional but Recommended)
 ```bash
 usermod -aG docker root
