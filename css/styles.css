@@ -446,6 +446,7 @@ body {
 
     .element-box {
         padding: 30px;
+        width: 90%;
     }
 
     .element-box h2 {
@@ -492,6 +493,18 @@ body {
 
     .element-box {
         padding: 20px;
+        width: 100%;
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .element-image {
+        justify-content: flex-start;
+    }
+
+    .element-image img {
+        width: 60px;
+        height: 60px;
     }
 
     .element-box h2 {
