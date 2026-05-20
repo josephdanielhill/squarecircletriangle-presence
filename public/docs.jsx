@@ -6,9 +6,9 @@ const G = window.SCT_GLYPHS;
 
 const SECTIONS = [
   { id: 'Home',     kind: 'home' },
-  { id: 'Square',   kind: 'shape', icon: 'square',   defaultOpen: true },
-  { id: 'Circle',   kind: 'shape', icon: 'circle',   defaultOpen: true },
-  { id: 'Triangle', kind: 'shape', icon: 'triangle', defaultOpen: true },
+  { id: 'Square',   kind: 'shape', icon: 'square',   defaultOpen: false },
+  { id: 'Circle',   kind: 'shape', icon: 'circle',   defaultOpen: false },
+  { id: 'Triangle', kind: 'shape', icon: 'triangle', defaultOpen: false },
 ];
 
 function useHashRoute() {
