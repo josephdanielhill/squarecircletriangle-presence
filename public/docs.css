@@ -360,6 +360,17 @@ h1.page-title {
   margin: 0 0 32px;
   text-wrap: pretty;
 }
+.page-lede-quote {
+  font-family: var(--ff-serif);
+  font-size: 26px;
+  line-height: 1.45;
+  color: var(--fg);
+  margin: 0 0 36px;
+  padding: 0 0 0 20px;
+  border-left: 3px solid var(--accent);
+  text-wrap: pretty;
+  font-style: italic;
+}
 
 .page-meta {
   display: flex;
