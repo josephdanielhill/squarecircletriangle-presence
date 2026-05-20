@@ -75,9 +75,6 @@ function Topbar({ page, onSearch, theme, onToggleTheme }) {
             : <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.5 1.5M11.5 11.5L13 13M3 13l1.5-1.5M11.5 4.5L13 3"/></svg>
           }
         </button>
-        <a className="icon-btn" title="GitHub" href="https://github.com/josephdanielhill/squarecircletriangle-presence" target="_blank" rel="noopener">
-          <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor"><path d="M8 .5C3.85.5.5 3.85.5 8a7.5 7.5 0 0 0 5.13 7.13c.37.07.5-.16.5-.36v-1.28c-2.08.45-2.52-.88-2.52-.88-.34-.86-.83-1.09-.83-1.09-.68-.46.05-.45.05-.45.75.05 1.15.77 1.15.77.67 1.14 1.75.81 2.18.62.07-.48.26-.81.47-1-1.66-.19-3.4-.83-3.4-3.7 0-.82.29-1.49.77-2.01-.08-.19-.34-.95.07-1.99 0 0 .63-.2 2.06.77a7.18 7.18 0 0 1 3.74 0c1.43-.97 2.06-.77 2.06-.77.41 1.04.15 1.8.07 1.99.48.52.77 1.19.77 2.01 0 2.88-1.75 3.51-3.42 3.69.27.23.5.69.5 1.39v2.06c0 .2.13.43.51.36A7.5 7.5 0 0 0 15.5 8C15.5 3.85 12.15.5 8 .5z"/></svg>
-        </a>
       </div>
     </header>
   );
@@ -430,7 +427,6 @@ window.SCT_App = function App() {
         <main className="main">
           <PageView page={page} />
         </main>
-        <Toc pageId={page.id} />
       </div>
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
 
