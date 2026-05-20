@@ -50,9 +50,16 @@ function BrandMark() {
   );
 }
 
-function Topbar({ page, onSearch, theme, onToggleTheme }) {
+function Topbar({ page, onSearch, theme, onToggleTheme, onMenuOpen }) {
   return (
     <header className="topbar">
+      <button className="menu-btn" onClick={onMenuOpen} aria-label="Open navigation">
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <line x1="2" y1="4.5" x2="14" y2="4.5"/>
+          <line x1="2" y1="8" x2="14" y2="8"/>
+          <line x1="2" y1="11.5" x2="14" y2="11.5"/>
+        </svg>
+      </button>
       <a className="brand" href="#/welcome">
         <BrandMark />
         <span className="brand-name"><b>SquareCircleTriangle</b></span>
@@ -80,7 +87,7 @@ function Topbar({ page, onSearch, theme, onToggleTheme }) {
   );
 }
 
-function Sidebar({ currentId }) {
+function Sidebar({ currentId, open, onClose }) {
   const bySection = pagesBySection();
 
   const [collapsed, setCollapsed] = React.useState(() => {
@@ -105,7 +112,15 @@ function Sidebar({ currentId }) {
   const homePage = PAGES.find(p => p.section === 'Home') || PAGES[0];
 
   return (
-    <aside className="sidebar">
+    <aside className={'sidebar' + (open ? ' is-open' : '')}
+           onClick={(e) => { if (e.target.tagName === 'A') onClose?.(); }}>
+      <button className="sidebar-close" onClick={onClose} aria-label="Close navigation">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <line x1="3" y1="3" x2="13" y2="13"/>
+          <line x1="13" y1="3" x2="3" y2="13"/>
+        </svg>
+        Close
+      </button>
       {SECTIONS.map(sec => {
         if (sec.kind === 'home') {
           return (
@@ -404,6 +419,12 @@ window.SCT_App = function App() {
   const route = useHashRoute();
   const page = findPage(route);
   const [searchOpen, setSearchOpen] = React.useState(false);
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  React.useEffect(() => { setSidebarOpen(false); }, [route]);
+  React.useEffect(() => {
+    document.body.style.overflow = sidebarOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [sidebarOpen]);
 
   const [t, setTweak] = useTweaks(window.TWEAK_DEFAULTS || { palette: 'cream', font: 'plex', density: 'comfortable' });
   React.useEffect(() => { applyTweaks(t); }, [t.palette, t.font, t.density]);
@@ -425,9 +446,11 @@ window.SCT_App = function App() {
   return (
     <>
       <Topbar page={page} onSearch={() => setSearchOpen(true)}
-              theme={theme} onToggleTheme={toggleTheme} />
+              theme={theme} onToggleTheme={toggleTheme}
+              onMenuOpen={() => setSidebarOpen(true)} />
+      {sidebarOpen && <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />}
       <div className="layout">
-        <Sidebar currentId={page.id} />
+        <Sidebar currentId={page.id} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <main className="main">
           <PageView page={page} />
         </main>
