@@ -292,7 +292,11 @@ function PageView({ page }) {
 
       {page.eyebrow && <div className="page-eyebrow">{page.eyebrow}</div>}
       <h1 className="page-title">{page.title}</h1>
-      {page.lede && <p className="page-lede">{page.lede}</p>}
+      {page.lede && (
+        page.ledeQuote
+          ? <blockquote className="page-lede-quote">{page.lede}</blockquote>
+          : <p className="page-lede">{page.lede}</p>
+      )}
 
       {page.updated && (
         <div className="page-meta">

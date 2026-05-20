@@ -56,6 +56,7 @@ const PAGES = [
     title: 'Welcome',
     eyebrow: 'Introduction',
     lede: 'Every person has the power to change the world. We believe in unleashing that power through knowledge shared, experiences connected, and technology reimagined.',
+    ledeQuote: true,
     updated: '',
     body: () => (
       <>
