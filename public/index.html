@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SquareCircleTriangle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="docs.css" />
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    window.TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "palette": "cream",
+      "font": "plex",
+      "density": "comfortable"
+    }/*EDITMODE-END*/;
+
+    const PALETTES = {
+      cream: {
+        bg:'#f4f1ec', panel:'#faf8f3', panel2:'#efece5',
+        fg:'#1a1a1a', fg2:'#3a3a3a', muted:'#6a655c', muted2:'#8a857c',
+        rule:'#e2ddd0', rule2:'#d9d3c5',
+        accent:'#c8553d', accentBg:'#f6e8df', codeBg:'#efece5', hover:'#ecebe2',
+      },
+      bone: {
+        bg:'#ece8de', panel:'#f4f1e7', panel2:'#e7e3d6',
+        fg:'#1f1f1f', fg2:'#3a3a3a', muted:'#6a655c', muted2:'#857f74',
+        rule:'#d6cfc0', rule2:'#cfc8b9',
+        accent:'#3b4a6b', accentBg:'#e6e9f0', codeBg:'#e7e3d6', hover:'#e3dfd0',
+      },
+      dark: {
+        bg:'#141414', panel:'#1a1a1a', panel2:'#202020',
+        fg:'#efeae0', fg2:'#d9d3c5', muted:'#8a857c', muted2:'#6a655c',
+        rule:'#2a2724', rule2:'#363230',
+        accent:'#d97757', accentBg:'#2a1f1a', codeBg:'#1f1d1a', hover:'#1f1d1a',
+      },
+      ink: {
+        bg:'#0d1117', panel:'#141a23', panel2:'#1a212c',
+        fg:'#e6ddc8', fg2:'#c8bfa9', muted:'#7b7567', muted2:'#5a5447',
+        rule:'#1f2630', rule2:'#262d39',
+        accent:'#c9a961', accentBg:'#262217', codeBg:'#1a212c', hover:'#1a212c',
+      },
+    };
+
+    const FONTS = {
+      plex:     { display:"'IBM Plex Sans', system-ui, sans-serif", body:"'IBM Plex Sans', system-ui, sans-serif" },
+      manrope:  { display:"'Manrope', system-ui, sans-serif",       body:"'Manrope', system-ui, sans-serif" },
+      newsread: { display:"'Newsreader', Georgia, serif",           body:"'Newsreader', Georgia, serif" },
+    };
+
+    const DENSITY = {
+      compact:     { lh: '1.55', pad: '32px 56px 90px', titleSize: '38px', maxw: '720px' },
+      comfortable: { lh: '1.65', pad: '48px 56px 120px', titleSize: '42px', maxw: '760px' },
+      spacious:    { lh: '1.8',  pad: '64px 64px 140px', titleSize: '46px', maxw: '820px' },
+    };
+
+    window.applyTweaks = function(t) {
+      const r = document.documentElement.style;
+      const p = PALETTES[t.palette] || PALETTES.cream;
+      const f = FONTS[t.font] || FONTS.plex;
+      const d = DENSITY[t.density] || DENSITY.comfortable;
+
+      r.setProperty('--bg', p.bg);
+      r.setProperty('--panel', p.panel);
+      r.setProperty('--panel-2', p.panel2);
+      r.setProperty('--fg', p.fg);
+      r.setProperty('--fg-2', p.fg2);
+      r.setProperty('--muted', p.muted);
+      r.setProperty('--muted-2', p.muted2);
+      r.setProperty('--rule', p.rule);
+      r.setProperty('--rule-2', p.rule2);
+      r.setProperty('--accent', p.accent);
+      r.setProperty('--accent-bg', p.accentBg);
+      r.setProperty('--code-bg', p.codeBg);
+      r.setProperty('--hover', p.hover);
+
+      r.setProperty('--ff-display', f.display);
+      r.setProperty('--ff-body', f.body);
+
+      document.body.style.lineHeight = d.lh;
+      r.setProperty('--maxw', d.maxw);
+    };
+
+    window.applyTweaks(window.TWEAK_DEFAULTS);
+  </script>
+
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="docs-content.jsx"></script>
+  <script type="text/babel" src="docs.jsx"></script>
+  <script type="text/babel">
+    const App = window.SCT_App;
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
