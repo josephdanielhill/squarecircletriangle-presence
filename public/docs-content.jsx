@@ -201,12 +201,6 @@ const PAGES = [
           <span className="ico">~</span>
           <span>DeckCRM is currently in private beta. <A page="circle">Join the network</A> to get early access.</span>
         </div>
-        <h2 id="principles">Design principles</h2>
-        <ul>
-          <li>Capture where you already work — email, notes, and calendar first.</li>
-          <li>Surface what matters without requiring manual updates.</li>
-          <li>Personal before organisational — your relationship graph, not the company's CRM.</li>
-        </ul>
       </>
     ),
   },
@@ -227,15 +221,6 @@ const PAGES = [
         <div className="callout warn">
           <span className="ico">~</span>
           <span>Timecard is in active development. Expected release Q3 2026.</span>
-        </div>
-        <h2 id="design">Design goals</h2>
-        <div className="dl">
-          <span className="term">Friction-free</span>
-          <span className="desc">Log time in under ten seconds. No categories until you need them.</span>
-          <span className="term">Honest reports</span>
-          <span className="desc">Surface where time actually goes, not what was planned.</span>
-          <span className="term">Small team first</span>
-          <span className="desc">Designed for two to twenty people, not enterprise.</span>
         </div>
       </>
     ),
