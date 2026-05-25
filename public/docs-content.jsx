@@ -45,7 +45,6 @@ const ShapeDiagram = () => (
       <div className="lbl">Triangle</div>
       <div>Technology reimagined</div>
     </div>
-    <div className="center-cap">Fig 01 — The ecosystem</div>
   </div>
 );
 
