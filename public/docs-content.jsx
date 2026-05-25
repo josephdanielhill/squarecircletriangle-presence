@@ -197,6 +197,37 @@ const PAGES = [
           DeckCRM is a lightweight personal relationship manager designed for relationship-led work. It is built around the core insight that our most valuable connections live in informal exchanges, email threads, and meeting notes—not in rigid enterprise CRM records.
         </p>
 
+        <div style={{ margin: '24px 0' }}>
+          <a
+            href="https://deckcrm.squarecircletriangle.co/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 20px',
+              background: 'var(--accent-bg)',
+              border: '1px solid var(--accent)',
+              color: 'var(--accent)',
+              borderRadius: '8px',
+              fontWeight: '500',
+              fontSize: '14.5px',
+              textDecoration: 'none',
+              transition: 'background-color 0.2s ease',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--hover)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--accent-bg)';
+            }}
+          >
+            <span>Launch DeckCRM</span>
+            <span style={{ fontSize: '12px' }}>↗</span>
+          </a>
+        </div>
+
         <div className="callout tip">
           <span className="ico">→</span>
           <span>
