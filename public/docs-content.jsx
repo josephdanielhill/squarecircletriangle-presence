@@ -175,6 +175,17 @@ const PAGES = [
             <p>Time and project tracking for small teams that actually gets used.</p>
             <span className="arrow">Learn more →</span>
           </a>
+          <a className="card" href="#/triangle-kostly">
+            <div className="card-icon">
+              <svg viewBox="0 0 16 16">
+                <polygon className="fill" points="8,1.4 14.6,14.4 1.4,14.4" />
+                <polygon className="stroke" points="8,1.4 14.6,14.4 1.4,14.4" />
+              </svg>
+            </div>
+            <h4>Kostly</h4>
+            <p>Track software tooling, project cost distribution, and share your stack publicly.</p>
+            <span className="arrow">Learn more →</span>
+          </a>
         </div>
         <p>
           Triangle applications are not built in isolation. They emerge from the patterns
@@ -734,6 +745,259 @@ const PAGES = [
                   <ul>
                     <li>Designed and implemented the core aesthetics using AI design assistance to lock in the look and feel.</li>
                     <li>Leveraged AI coding agents to implement the initial functional version.</li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </>
+    ),
+  },
+  {
+    id: 'triangle-kostly',
+    section: 'Triangle',
+    title: 'Kostly',
+    eyebrow: 'Triangle · Application',
+    lede: 'Track software tooling, project cost distribution, and share your stack publicly.',
+    updated: 'April 2026 by JH',
+    body: () => (
+      <>
+        <p>
+          Kostly is a simple tool designed to enable builders and teams to track exactly what software tooling is utilized for which project. It displays precise cost distributions and generates a public profile page to share this stack index transparently, supporting a true "build in the open" ethos.
+        </p>
+
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', margin: '24px 0' }}>
+          <a
+            href="https://kostly.squarecircletriangle.co/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 20px',
+              background: 'var(--accent-bg)',
+              border: '1px solid var(--accent)',
+              color: 'var(--accent)',
+              borderRadius: '8px',
+              fontWeight: '500',
+              fontSize: '14.5px',
+              textDecoration: 'none',
+              transition: 'background-color 0.2s ease',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--hover)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--accent-bg)';
+            }}
+          >
+            <span>Launch Kostly</span>
+            <span style={{ fontSize: '12px' }}>↗</span>
+          </a>
+          <a
+            href="https://kostly.squarecircletriangle.co/stackindex"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 20px',
+              background: 'transparent',
+              border: '1px solid var(--rule)',
+              color: 'var(--fg)',
+              borderRadius: '8px',
+              fontWeight: '500',
+              fontSize: '14.5px',
+              textDecoration: 'none',
+              transition: 'background-color 0.2s ease, border-color 0.2s ease',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--hover)';
+              e.currentTarget.style.borderColor = 'var(--muted)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.borderColor = 'var(--rule)';
+            }}
+          >
+            <span>Explore Stack Index</span>
+            <span style={{ fontSize: '12px' }}>↗</span>
+          </a>
+        </div>
+
+        <div className="callout tip">
+          <span className="ico">→</span>
+          <span>
+            <strong>Project Status:</strong> Active micro-app launched publicly. Deployed in March 2026 with full project-tool cost distribution graphs, upcoming renewal email/bubble alerts, and a global Stack Index.
+          </span>
+        </div>
+
+        <h2 id="objective">Objective &amp; Concept</h2>
+        <p>
+          Kostly was designed to address a common pain point: as a builder or small team scales, software subscription costs become fragmented across multiple projects. Kostly brings order by letting you define your tools, record renewal calendars and no-cost periods, and visualize true project-specific expenses, while providing a public-facing OpenPage showing what you use.
+        </p>
+        <p>
+          The core functionality centers around:
+        </p>
+        <ul>
+          <li><strong>Tool &amp; Project Mapping:</strong> Map software licenses directly to specific projects and cost thresholds, enabling a clear view of where money is being spent.</li>
+          <li><strong>Public OpenPage Stacks:</strong> Automatically index your verified stack under a shareable short URL (powered by ezli.me) to build transparency with your users and community.</li>
+          <li><strong>Interactive Insights:</strong> Dashboard graphs displaying currency-converted project cost limits, renewal calendars, and cancellation alerts.</li>
+        </ul>
+
+        <h2 id="impulse">The Impulse</h2>
+        <p>
+          With the first micro-app, DeckCRM, over 36 hours of total development was invested. A main takeaway was: <em>how can we achieve similar or greater product scope with significantly reduced time?</em>
+        </p>
+        <p>
+          By utilizing a structured workflow (very clear Miro board mapping, specialized LLM/MCP PRD definitions, and a streamlined Vibe Coding process), Kostly was built and launched with just over 16 hours of development time. It stands as a testament to the compounding speed of AI-assisted development pipeline mastery.
+        </p>
+        <p>
+          Additionally, Kostly introduced a collaborative Stack Index—inviting the public to review, discover, and share how their software stack makes them feel and what value they actually derive from each subscription.
+        </p>
+
+        <h2 id="development-pipeline">Pipeline &amp; Velocity</h2>
+        <p>
+          Kostly highlights a major evolution in the monthly micro-app challenge:
+        </p>
+        <div className="dl">
+          <span className="term">Miro Conceptualizing</span>
+          <span className="desc">Mapping out the complete UX flow and dashboard limits before typing a line of code.</span>
+          
+          <span className="term">Vibe Coding Mastery</span>
+          <span className="desc">Utilizing Miro MCP, Claude, and Github Copilot to generate comprehensive prompts, dropping dev time by over 50% compared to DeckCRM.</span>
+          
+          <span className="term">Building in Public</span>
+          <span className="desc">A shared stack index enabling community ratings and absolute transparency.</span>
+        </div>
+
+        <h2 id="changelog">Changelog &amp; Milestones</h2>
+        <p>
+          An active timeline of the design phases, feature integrations, and version deployments:
+        </p>
+        <div className="tbl">
+          <table>
+            <thead>
+              <tr>
+                <th style={{ width: '130px' }}>Date</th>
+                <th>Changes &amp; Milestones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>01 Apr 2026</td>
+                <td>
+                  <strong>Inactive Scheduling</strong>
+                  <ul>
+                    <li>Added Cancel Tool option from a specific date to automatically set it inactive.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>10 Mar 2026</td>
+                <td>
+                  <strong>Reminder Optimization</strong>
+                  <ul>
+                    <li>Improved the automated reminder system for rating tools on the index.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>02 Mar 2026</td>
+                <td>
+                  <strong>Index Prototype &amp; Mobile</strong>
+                  <ul>
+                    <li>Created the first tool index prototype.</li>
+                    <li>Updated the product landing page and index navigation.</li>
+                    <li>Generated launch assets for ProductHunt and Peerlist integrations.</li>
+                    <li>Designed and implemented a simplified Mobile Version of the dashboard.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>27 Feb 2026</td>
+                <td>
+                  <strong>Onboarding &amp; Add Flows</strong>
+                  <ul>
+                    <li>Created the simplified user onboarding flow.</li>
+                    <li>Implemented a direct adding new tool and adding new project flow.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>22 Feb 2026</td>
+                <td>
+                  <strong>Layouts &amp; Thresholds</strong>
+                  <ul>
+                    <li>Improved global application layouts.</li>
+                    <li>Added the capability to define multiple Project Cost Threshold alerts.</li>
+                    <li>Bug fixed project-specific dashboard views.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>21 Feb 2026</td>
+                <td>
+                  <strong>Visual Overhaul &amp; Metrics</strong>
+                  <ul>
+                    <li>Massive Visual Overhaul of the main Tool Page.</li>
+                    <li>Added tool cancellation alerts, project renewal bubble prompts, and notes support.</li>
+                    <li>Added graph for Project Total Costs on the Dashboard and configured currency conversions.</li>
+                    <li>Integrated the new OpenPage Global View and deployed ezli.me short URLs.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>13 Feb 2026</td>
+                <td>
+                  <strong>Reminders &amp; Exports</strong>
+                  <ul>
+                    <li>Implemented per-tool custom renewal reminders.</li>
+                    <li>Created account-level CSV file exports.</li>
+                    <li>Improved UX handling of asynchronous processes.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>11 Feb 2026</td>
+                <td>
+                  <strong>Responsive Currency</strong>
+                  <ul>
+                    <li>Added Short URL Support via ezli.me and integrated currency handling on the stack.</li>
+                    <li>Implemented responsive designs and moved tag filters.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>09 Feb 2026</td>
+                <td>
+                  <strong>OpenPage MVP</strong>
+                  <ul>
+                    <li>Added ability to assign tools to projects from the Stack flow.</li>
+                    <li>Enabled financial detail visibility toggles for the public OpenPage profiles.</li>
+                    <li>Deployed MVP of the Profile OpenPage Concept.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>08 Feb 2026</td>
+                <td>
+                  <strong>PRD &amp; Infrastructure</strong>
+                  <ul>
+                    <li>Authored PRD and initial vibe coding prompts using Miro MCP and Claude.</li>
+                    <li>Set up the Base44 project spaces, domain routing, and renewal calendar calendar-views.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>21 Jan 2026</td>
+                <td>
+                  <strong>Initialization</strong>
+                  <ul>
+                    <li>Initialized project spaces, Linear tasks, and initial Miro concept planning boards.</li>
                   </ul>
                 </td>
               </tr>
