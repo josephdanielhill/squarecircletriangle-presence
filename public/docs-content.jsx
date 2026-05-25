@@ -279,35 +279,6 @@ const PAGES = [
           <span className="desc"><strong>Figma</strong> for UI concepts, <strong>Miro</strong> for flow boards, <strong>Linear</strong> for tracking milestones, <strong>Tally</strong> for customer feedback, and <strong>Toggl</strong> for precise time tracking.</span>
         </div>
 
-        <h2 id="mechanics">App Mechanics</h2>
-        
-        <h3 id="debug-menu">Secret Debug Menu</h3>
-        <p>
-          To facilitate testing and rapid verification of app state, a secret debug system was engineered directly into the search bar. By searching for the exact query <code>DEBUG_MENU_TRUE</code>, you unlock a hidden administrative panel that provides real-time account stats and advanced simulations:
-        </p>
-        <ul>
-          <li><strong>Email Simulator:</strong> Triggers and previews the daily email notification for overdue contacts.</li>
-          <li><strong>Instant Card Spawning:</strong> Generates either an immediately overdue card or a card in the "Contact Soon" queue to test UI layouts.</li>
-          <li><strong>Coffee Modal Trigger:</strong> Instantly displays the appreciation overlay to verify responsiveness.</li>
-        </ul>
-
-        <h3 id="coffee-logic">Buy Me a Coffee Logic</h3>
-        <p>
-          To gently nudge users towards supporting the project without hindering their core workflow, a soft-paywall appreciation modal was added. It triggers dynamically based on the following usage milestones:
-        </p>
-        <div className="dl">
-          <span className="term">Deck Milestone</span>
-          <span className="desc">Immediately after a user creates their 3rd Deck.</span>
-          
-          <span className="term">Contact Milestone</span>
-          <span className="desc">Immediately after a user adds their 5th Contact card.</span>
-          
-          <span className="term">Login Milestone</span>
-          <span className="desc">Upon the user's 4th successful login to the application.</span>
-          
-          <span className="term">Time Milestone</span>
-          <span className="desc">Once 30 days have elapsed since the account's initial creation date.</span>
-        </div>
 
         <h2 id="changelog">Changelog &amp; Milestones</h2>
         <p>
