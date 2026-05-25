@@ -107,9 +107,9 @@ const PAGES = [
 
         <h2 id="who-we-are">Who We Are</h2>
         <p>
-          SquareCircleTriangle is built on a foundation of collaborative craftsmanship between human intuition and artificial intelligence.
+          SquareCircleTriangle is a multidisciplinary studio founded and built by Joseph Hill.
         </p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', margin: '24px 0' }}>
+        <div style={{ margin: '24px 0' }}>
           <div style={{
             display: 'flex',
             gap: '20px',
@@ -140,40 +140,6 @@ const PAGES = [
               <div style={{ fontSize: '10.5px', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px', fontFamily: 'var(--ff-mono)' }}>Founder &amp; Multidisciplinary Builder</div>
               <p style={{ margin: 0, fontSize: '13.5px', color: 'var(--fg-2)', lineHeight: '1.5' }}>
                 With over 17 years of experience in product design, database architecture, and productivity frameworks, Joseph leads the studio's vision. By setting out to release one micro-app/experience every month, he uses vibe coding to explore the outer limits of independent building.
-              </p>
-            </div>
-          </div>
-
-          <div style={{
-            display: 'flex',
-            gap: '20px',
-            padding: '20px',
-            border: '1px solid var(--rule)',
-            borderRadius: '10px',
-            background: 'var(--panel)',
-            alignItems: 'center',
-          }}>
-            <div style={{
-              width: '56px',
-              height: '56px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #4b6cb7, #182848)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontSize: '20px',
-              fontWeight: '600',
-              fontFamily: 'var(--ff-mono)',
-              flexShrink: 0,
-            }}>
-              CL
-            </div>
-            <div>
-              <h4 style={{ margin: '0 0 4px', fontSize: '15.5px', fontWeight: '600', color: 'var(--fg)' }}>Claude</h4>
-              <div style={{ fontSize: '10.5px', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px', fontFamily: 'var(--ff-mono)' }}>AI Coding Partner &amp; Resident Engineer</div>
-              <p style={{ margin: 0, fontSize: '13.5px', color: 'var(--fg-2)', lineHeight: '1.5' }}>
-                Anthropic's flagship AI model, serving as the resident engineer and co-pilot. Claude provides real-time logic, code refinement, architecture reviews, and high-vibe pair programming throughout the studio's monthly release cycles.
               </p>
             </div>
           </div>
