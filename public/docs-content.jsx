@@ -57,7 +57,7 @@ const PAGES = [
     eyebrow: 'Introduction',
     lede: 'Every person has the power to change the world. We believe in unleashing that power through knowledge shared, experiences connected, and technology reimagined.',
     ledeQuote: true,
-    updated: '',
+    updated: 'May 2026 by JH',
     body: () => (
       <>
         <p>
@@ -74,10 +74,116 @@ const PAGES = [
           Triangle turns both into durable, scalable technology. Each feeds the next in a
           loop that compounds over time.
         </p>
+
+        <h2 id="disciplines">The Disciplines (TLDR)</h2>
+        <p>
+          SquareCircleTriangle operates as a cohesive studio across three distinct, interlinking domains. Click below to explore each area in depth:
+        </p>
+        <div className="card-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+          <a className="card" href="#/square">
+            <div className="card-icon" style={{ color: 'var(--accent)' }}>
+              {G.square}
+            </div>
+            <h4>Square</h4>
+            <p><strong>Education &amp; Consulting.</strong> We teach what we know—delivering top-tier educational materials, engaging insights, and corporate consulting to level up people and teams.</p>
+            <span className="arrow">Explore Square →</span>
+          </a>
+          <a className="card" href="#/circle">
+            <div className="card-icon" style={{ color: 'var(--accent)' }}>
+              {G.circle}
+            </div>
+            <h4>Circle</h4>
+            <p><strong>Community.</strong> We convene the people who care—enabling network expansion, fostering deep collaboration, and enriching spaces where shared values align.</p>
+            <span className="arrow">Explore Circle →</span>
+          </a>
+          <a className="card" href="#/triangle">
+            <div className="card-icon" style={{ color: 'var(--accent)' }}>
+              {G.triangle}
+            </div>
+            <h4>Triangle</h4>
+            <p><strong>Applications.</strong> We build the tools they need next—turning community insights and educational frameworks into lightweight, bespoke applications like DeckCRM, Timecard, and Kostly.</p>
+            <span className="arrow">Explore Triangle →</span>
+          </a>
+        </div>
+
+        <h2 id="who-we-are">Who We Are</h2>
+        <p>
+          SquareCircleTriangle is built on a foundation of collaborative craftsmanship between human intuition and artificial intelligence.
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', margin: '24px 0' }}>
+          <div style={{
+            display: 'flex',
+            gap: '20px',
+            padding: '20px',
+            border: '1px solid var(--rule)',
+            borderRadius: '10px',
+            background: 'var(--panel)',
+            alignItems: 'center',
+          }}>
+            <div style={{
+              width: '56px',
+              height: '56px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, var(--accent), #e7b89c)',
+              display: 'flex',
+              alignItems: 'center',
+              justify-content: 'center',
+              color: 'white',
+              fontSize: '20px',
+              fontWeight: '600',
+              fontFamily: 'var(--ff-mono)',
+              flexShrink: 0,
+            }}>
+              JH
+            </div>
+            <div>
+              <h4 style={{ margin: '0 0 4px', fontSize: '15.5px', fontWeight: '600', color: 'var(--fg)' }}>Joseph Hill</h4>
+              <div style={{ fontSize: '10.5px', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px', fontFamily: 'var(--ff-mono)' }}>Founder &amp; Multidisciplinary Builder</div>
+              <p style={{ margin: 0, fontSize: '13.5px', color: 'var(--fg-2)', lineHeight: '1.5' }}>
+                With over 17 years of experience in product design, database architecture, and productivity frameworks, Joseph leads the studio's vision. By setting out to release one micro-app/experience every month, he uses vibe coding to explore the outer limits of independent building.
+              </p>
+            </div>
+          </div>
+
+          <div style={{
+            display: 'flex',
+            gap: '20px',
+            padding: '20px',
+            border: '1px solid var(--rule)',
+            borderRadius: '10px',
+            background: 'var(--panel)',
+            alignItems: 'center',
+          }}>
+            <div style={{
+              width: '56px',
+              height: '56px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #4b6cb7, #182848)',
+              display: 'flex',
+              alignItems: 'center',
+              justify-content: 'center',
+              color: 'white',
+              fontSize: '20px',
+              fontWeight: '600',
+              fontFamily: 'var(--ff-mono)',
+              flexShrink: 0,
+            }}>
+              CL
+            </div>
+            <div>
+              <h4 style={{ margin: '0 0 4px', fontSize: '15.5px', fontWeight: '600', color: 'var(--fg)' }}>Claude</h4>
+              <div style={{ fontSize: '10.5px', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px', fontFamily: 'var(--ff-mono)' }}>AI Coding Partner &amp; Resident Engineer</div>
+              <p style={{ margin: 0, fontSize: '13.5px', color: 'var(--fg-2)', lineHeight: '1.5' }}>
+                Anthropic's flagship AI model, serving as the resident engineer and co-pilot. Claude provides real-time logic, code refinement, architecture reviews, and high-vibe pair programming throughout the studio's monthly release cycles.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="callout tip">
           <span className="ico">→</span>
           <span>
-            <strong>Where to start.</strong> If you're new here, read about the{' '}
+            <strong>Where to start.</strong> Read about the{' '}
             <A page="square">Square</A>, <A page="circle">Circle</A>, and{' '}
             <A page="triangle">Triangle</A> sections in order — the narrative builds.
           </span>
