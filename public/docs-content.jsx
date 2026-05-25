@@ -570,26 +570,175 @@ const PAGES = [
     title: 'Timecard',
     eyebrow: 'Triangle · Application',
     lede: 'Time and project tracking for small teams that actually gets used.',
-    updated: '',
+    updated: 'April 2026 by JH',
     body: () => (
       <>
         <p>
-          Timecard is a minimal time-tracking tool built for small teams and independent
-          practitioners. The hypothesis: most time-tracking tools fail because they require
-          more effort than the insight they return. Timecard inverts this.
+          Continuing to "own" my own stack, Timecard is a simple time and context-based tool designed to log and associate time with specific activities, enabling practitioners and small teams to reflect on and understand their time investments across various topics and themes.
         </p>
-        <div className="callout warn">
-          <span className="ico">~</span>
-          <span>Timecard is in active development. Expected release Q3 2026.</span>
+
+        <div style={{ margin: '24px 0' }}>
+          <a
+            href="https://timecard.squarecircletriangle.co/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 20px',
+              background: 'var(--accent-bg)',
+              border: '1px solid var(--accent)',
+              color: 'var(--accent)',
+              borderRadius: '8px',
+              fontWeight: '500',
+              fontSize: '14.5px',
+              textDecoration: 'none',
+              transition: 'background-color 0.2s ease',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--hover)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--accent-bg)';
+            }}
+          >
+            <span>Launch Timecard</span>
+            <span style={{ fontSize: '12px' }}>↗</span>
+          </a>
         </div>
-        <h2 id="design">Design goals</h2>
+
+        <div className="callout tip">
+          <span className="ico">→</span>
+          <span>
+            <strong>Project Status:</strong> Active micro-app with ongoing refinements. Deployed in April 2026 with full reporting, push notifications, and customizable goals.
+          </span>
+        </div>
+
+        <h2 id="objective">Objective &amp; Concept</h2>
+        <p>
+          Timecard was created to invert the typical time-tracking experience: most tools fail because they require more manual effort to input than the actual value of the insights they return. Timecard inverts this by focusing on friction-free inputs and clear, instant reflection.
+        </p>
+        <p>
+          The core functionality centers around:
+        </p>
+        <ul>
+          <li><strong>Friction-Free Logging:</strong> Start and stop tracking with a single click, associating time blocks with specific cards, decks, or context themes.</li>
+          <li><strong>Customizable Goals:</strong> Establish goals at both the deck and card levels to maintain target focus and review performance against milestones.</li>
+          <li><strong>Instant Visual Insights:</strong> A dedicated Insights view with robust "By Cards" analytics that strips out inactive items and provides real-time time-allocation reflection.</li>
+        </ul>
+
+        <h2 id="impulse">The Impulse</h2>
+        <p>
+          In a modern workflow, time is the ultimate currency, yet tracking it is notoriously tedious. Most tools feel like homework. Timecard was built to feel lightweight and immediate—empowering builders to own their own time data without the weight of enterprise features.
+        </p>
+
+        <h2 id="design">Design Goals</h2>
         <div className="dl">
           <span className="term">Friction-free</span>
           <span className="desc">Log time in under ten seconds. No categories until you need them.</span>
+          
           <span className="term">Honest reports</span>
           <span className="desc">Surface where time actually goes, not what was planned.</span>
+          
           <span className="term">Small team first</span>
           <span className="desc">Designed for two to twenty people, not enterprise.</span>
+        </div>
+
+        <h2 id="changelog">Changelog &amp; Milestones</h2>
+        <p>
+          An active timeline of the design phases, feature integrations, and version deployments:
+        </p>
+        <div className="tbl">
+          <table>
+            <thead>
+              <tr>
+                <th style={{ width: '130px' }}>Date</th>
+                <th>Changes &amp; Milestones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>30 Apr 2026</td>
+                <td>
+                  <strong>Behind the Clock &amp; Configuration</strong>
+                  <ul>
+                    <li>Added "Behind the clock" section for time context and reflection.</li>
+                    <li>Added savable report configuration to quickly retrieve frequent views.</li>
+                    <li>Minor UX improvements and interface polish.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>29 Apr 2026</td>
+                <td>
+                  <strong>Reporting Engine &amp; Timers</strong>
+                  <ul>
+                    <li>Added the Reporting feature to generate customizable timecard reports.</li>
+                    <li>Added Primary and Secondary Timer definitions for concurrent task tracking.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>27 Apr 2026</td>
+                <td>
+                  <strong>Notifications &amp; Styling</strong>
+                  <ul>
+                    <li>Added Push Notifications for active timers and tracking reminders.</li>
+                    <li>Updated the Settings Area controls and layout.</li>
+                    <li>Adjusted the app icon for better visibility and aesthetic alignment.</li>
+                    <li>Minor UX improvements on Card Panels.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>26 Apr 2026</td>
+                <td>
+                  <strong>Insights &amp; Sidebar</strong>
+                  <ul>
+                    <li>Added previously used cards for the day in the side panel (for both Web and Mobile).</li>
+                    <li>Made minor alignment improvements throughout the card lists.</li>
+                    <li>Added the active timer display into the page title.</li>
+                    <li>Removed cards with 0m tracked from the Insights view.</li>
+                    <li>Improved the "By Cards" layout in Insights.</li>
+                    <li>Added customizable Deck and Card Goal functionality.</li>
+                    <li>Integrated an Insights overview directly into the sidebar clock.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>25 Apr 2026</td>
+                <td>
+                  <strong>Project Spaces &amp; Feedback</strong>
+                  <ul>
+                    <li>Created the dedicated Project Space and details view.</li>
+                    <li>Updated the Feedback Form URL and integrated the direct Feedback button.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>24 Apr 2026</td>
+                <td>
+                  <strong>Timer Control &amp; Log Adjustments</strong>
+                  <ul>
+                    <li>Implemented card-specific URLs and direct timer start functionality.</li>
+                    <li>Added capabilities to manually add, modify, and delete time logs.</li>
+                    <li>Updated the Insights area with clearer and more high-contrast visuals.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>23 Apr 2026</td>
+                <td>
+                  <strong>Project Launch</strong>
+                  <ul>
+                    <li>Designed and implemented the core aesthetics using AI design assistance to lock in the look and feel.</li>
+                    <li>Leveraged AI coding agents to implement the initial functional version.</li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </>
     ),
