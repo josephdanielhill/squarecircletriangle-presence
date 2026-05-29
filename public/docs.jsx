@@ -75,7 +75,6 @@ function Topbar({ page, onSearch, theme, onToggleTheme, onMenuOpen }) {
         </button>
       </div>
       <div className="topbar-right">
-        <span className="pill"><span className="dot"></span> v2026.1</span>
         <button className="icon-btn" title="Toggle theme" onClick={onToggleTheme} aria-label="Toggle theme">
           {theme === 'dark'
             ? <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor"><path d="M11.5 9.5a4 4 0 1 1-5-5 4.5 4.5 0 0 0 5 5z"/></svg>
