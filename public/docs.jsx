@@ -1,5 +1,5 @@
 /* eslint-disable */
-// docs.jsx — app shell: topbar + sidebar + main + TOC + hash routing + search
+// docs.jsx: app shell: topbar + sidebar + main + TOC + hash routing + search
 
 const PAGES = window.SCT_PAGES;
 const G = window.SCT_GLYPHS;

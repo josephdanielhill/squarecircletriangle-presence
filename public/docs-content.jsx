@@ -1,5 +1,5 @@
 /* eslint-disable */
-// docs-content.jsx — page tree + content for SquareCircleTriangle docs
+// docs-content.jsx: page tree + content for SquareCircleTriangle docs
 
 const G = {
   square: (
@@ -26,27 +26,6 @@ const A = ({ href, children, page }) => (
   <a className="inline" href={href || ('#/' + (page || ''))}>{children}</a>
 );
 
-const ShapeDiagram = () => (
-  <div className="shape-diagram">
-    <div className="node">
-      <div className="shape">{G.square}</div>
-      <div className="lbl">Square</div>
-      <div>Knowledge shared</div>
-    </div>
-    <div className="connector"></div>
-    <div className="node">
-      <div className="shape">{G.circle}</div>
-      <div className="lbl">Circle</div>
-      <div>Experiences connected</div>
-    </div>
-    <div className="connector"></div>
-    <div className="node">
-      <div className="shape">{G.triangle}</div>
-      <div className="lbl">Triangle</div>
-      <div>Technology reimagined</div>
-    </div>
-  </div>
-);
 
 const PAGES = [
   {
@@ -60,15 +39,14 @@ const PAGES = [
     body: () => (
       <>
         <p>
-          <strong>SquareCircleTriangle</strong> is a studio in three shapes — three disciplines
+          <strong>SquareCircleTriangle</strong> is a studio built on three shapes: three disciplines
           that feed each other in a continuous loop. We
           {' '}<A page="square">teach what we know</A>,
           {' '}<A page="circle">convene the people who care</A>, and
           {' '}<A page="triangle">build the tools they need next</A>.
         </p>
-        <ShapeDiagram />
         <p>
-          The shapes are not metaphors — they are the operating model. Square generates
+          The shapes are not metaphors; they are the operating model. Square generates
           the intellectual capital; Circle surfaces the people and contexts that need it;
           Triangle turns both into durable, scalable technology. Each feeds the next in a
           loop that compounds over time.
@@ -84,7 +62,7 @@ const PAGES = [
               {G.square}
             </div>
             <h4>Square</h4>
-            <p><strong>Education &amp; Consulting.</strong> We teach what we know—delivering top-tier educational materials, engaging insights, and corporate consulting to level up people and teams.</p>
+            <p><strong>Education &amp; Consulting.</strong> We teach what we know, delivering top-tier educational materials, engaging insights, and corporate consulting to level up people and teams.</p>
             <span className="arrow">Explore Square →</span>
           </a>
           <a className="card" href="#/circle">
@@ -92,7 +70,7 @@ const PAGES = [
               {G.circle}
             </div>
             <h4>Circle</h4>
-            <p><strong>Community.</strong> We convene the people who care—enabling network expansion, fostering deep collaboration, and enriching spaces where shared values align.</p>
+            <p><strong>Community.</strong> We convene the people who care, enabling network expansion, fostering deep collaboration, and enriching spaces where shared values align.</p>
             <span className="arrow">Explore Circle →</span>
           </a>
           <a className="card" href="#/triangle">
@@ -100,7 +78,7 @@ const PAGES = [
               {G.triangle}
             </div>
             <h4>Triangle</h4>
-            <p><strong>Applications.</strong> We build the tools they need next—turning community insights and educational frameworks into lightweight, bespoke applications like DeckCRM, Timecard, and Kostly.</p>
+            <p><strong>Applications.</strong> We build the tools they need next, turning community insights and educational frameworks into lightweight, bespoke applications like DeckCRM, Timecard, and Kostly.</p>
             <span className="arrow">Explore Triangle →</span>
           </a>
         </div>
@@ -150,7 +128,7 @@ const PAGES = [
           <span>
             <strong>Where to start.</strong> Read about the{' '}
             <A page="square">Square</A>, <A page="circle">Circle</A>, and{' '}
-            <A page="triangle">Triangle</A> sections in order — the narrative builds.
+            <A page="triangle">Triangle</A> sections in order; the narrative builds.
           </span>
         </div>
       </>
@@ -201,7 +179,7 @@ const PAGES = [
         </p>
         <p>
           Community is the medium that transforms individual learning into collective
-          capacity. A well-formed Circle doesn't just support its members — it generates
+          capacity. A well-formed Circle doesn't just support its members; it generates
           the insights and relationships that feed back into Square and Triangle.
         </p>
       </>
@@ -276,7 +254,7 @@ const PAGES = [
     body: () => (
       <>
         <p>
-          DeckCRM is a lightweight personal relationship manager designed for relationship-led work. It is built around the core insight that our most valuable connections live in informal exchanges, email threads, and meeting notes—not in rigid enterprise CRM records.
+          DeckCRM is a lightweight personal relationship manager designed for relationship-led work. It is built around the core insight that our most valuable connections live in informal exchanges, email threads, and meeting notes, rather than in rigid enterprise CRM records.
         </p>
 
         <div style={{ margin: '24px 0' }}>
@@ -712,7 +690,7 @@ const PAGES = [
 
         <h2 id="impulse">The Impulse</h2>
         <p>
-          In a modern workflow, time is the ultimate currency, yet tracking it is notoriously tedious. Most tools feel like homework. Timecard was built to feel lightweight and immediate—empowering builders to own their own time data without the weight of enterprise features.
+          In a modern workflow, time is the ultimate currency, yet tracking it is notoriously tedious. Most tools feel like homework. Timecard was built to feel lightweight and immediate, empowering builders to own their own time data without the weight of enterprise features.
         </p>
 
         <h2 id="design">Design Goals</h2>
@@ -927,7 +905,7 @@ const PAGES = [
           By utilizing a structured workflow (very clear Miro board mapping, specialized LLM/MCP PRD definitions, and a streamlined Vibe Coding process), Kostly was built and launched with just over 16 hours of development time. It stands as a testament to the compounding speed of AI-assisted development pipeline mastery.
         </p>
         <p>
-          Additionally, Kostly introduced a collaborative Stack Index—inviting the public to review, discover, and share how their software stack makes them feel and what value they actually derive from each subscription.
+          Additionally, Kostly introduced a collaborative Stack Index, inviting the public to review, discover, and share how their software stack makes them feel and what value they actually derive from each subscription.
         </p>
 
         <h2 id="development-pipeline">Pipeline &amp; Velocity</h2>
