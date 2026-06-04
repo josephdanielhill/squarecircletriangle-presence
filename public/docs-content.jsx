@@ -246,7 +246,7 @@ const PAGES = [
         </p>
         <div className="dl">
           <span className="term">When</span>
-          <span className="desc">Every Wednesday evening, starting at 19:00.</span>
+          <span className="desc">Every Monday from 16:30.</span>
 
           <span className="term">Where</span>
           <span className="desc">Langenhorn Markt area, Hamburg (get in touch for the specific location details).</span>
