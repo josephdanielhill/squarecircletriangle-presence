@@ -177,11 +177,93 @@ const PAGES = [
           collaboration, or building networks around shared values, we help create meaningful
           spaces where people can grow, contribute, and support one another.
         </p>
+        <div className="card-grid">
+          <a className="card" href="#/circle-law">
+            <div className="card-icon">
+              {G.circle}
+            </div>
+            <h4>Langenhorn AI Weekly (LAW)</h4>
+            <p>A weekly get-together for AI enthusiasts and builders in Hamburg to share insights and show &amp; tell.</p>
+            <span className="arrow">Learn more →</span>
+          </a>
+        </div>
         <p>
           Community is the medium that transforms individual learning into collective
           capacity. A well-formed Circle doesn't just support its members; it generates
           the insights and relationships that feed back into Square and Triangle.
         </p>
+      </>
+    ),
+  },
+  {
+    id: 'circle-law',
+    section: 'Circle',
+    title: 'Langenhorn (Hamburg) AI Weekly',
+    eyebrow: 'Circle · Community',
+    lede: 'A weekly show-and-tell and casual exchange for like-minded builders utilizing AI for private projects and work insights.',
+    updated: 'June 2026 by JH',
+    body: () => (
+      <>
+        <p>
+          <strong>Langenhorn (Hamburg) AI Weekly</strong> (or <strong>LAW</strong> for short) is a weekly get-together in Langenhorn, Hamburg. It serves as a casual exchange for like-minded people who are utilizing AI for private projects and work insights.
+        </p>
+        <p>
+          The meetup is built on the belief that the best way to keep up with the rapid pace of AI progress is to share real, hands-on experiences. Rather than listening to formal lectures, we gather to talk, share what we are working on, and exchange practical insights.
+        </p>
+
+        <h2 id="format">The Format</h2>
+        <p>
+          LAW events are structured around casual, interactive collaboration rather than rigid presentations:
+        </p>
+        <div className="card-grid">
+          <div className="card">
+            <h4>Casual Exchange</h4>
+            <p>Catch up on the latest AI news, tooling updates, and model releases in a relaxed setting.</p>
+          </div>
+          <div className="card">
+            <h4>Show &amp; Tell</h4>
+            <p>A low-pressure space to demo private projects, custom prompts, workflows, or experimental tools you're building.</p>
+          </div>
+          <div className="card">
+            <h4>Work &amp; Private Insights</h4>
+            <p>Discuss real-world learnings from using AI for daily tasks, professional pipelines, and personal workflows.</p>
+          </div>
+        </div>
+
+        <h2 id="who-it-is-for">Who It Is For</h2>
+        <p>
+          The weekly is designed for anyone actively experimenting with or using AI:
+        </p>
+        <ul>
+          <li><strong>Developers &amp; Builders:</strong> Sharing scripts, vibe coding setups, custom agents, and tool integrations.</li>
+          <li><strong>Creators &amp; Designers:</strong> Sharing AI-assisted content pipelines, UI generation, and design assets.</li>
+          <li><strong>Curious Minds:</strong> Anyone looking to learn, explore, and find inspiration from others' workflows.</li>
+        </ul>
+
+        <h2 id="meetup-details">Meetup Details</h2>
+        <p>
+          Here is all the essential information to help you join our next get-together:
+        </p>
+        <div className="dl">
+          <span className="term">When</span>
+          <span className="desc">Every Wednesday evening, starting at 19:00.</span>
+
+          <span className="term">Where</span>
+          <span className="desc">Langenhorn Markt area, Hamburg (get in touch for the specific location details).</span>
+
+          <span className="term">Cost</span>
+          <span className="desc">Free to attend. Bring your own laptop, projects, and curiosity.</span>
+
+          <span className="term">Focus Areas</span>
+          <span className="desc">AI engineering, vibe coding, LLM application architecture, automation, and prompt optimization.</span>
+        </div>
+
+        <div className="callout tip">
+          <span className="ico">→</span>
+          <span>
+            <strong>How to Join:</strong> Simply show up with a project to share, a question to ask, or just a desire to listen and connect with local builders.
+          </span>
+        </div>
       </>
     ),
   },
