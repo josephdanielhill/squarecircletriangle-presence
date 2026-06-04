@@ -261,7 +261,7 @@ const PAGES = [
         <div className="callout tip">
           <span className="ico">→</span>
           <span>
-            <strong>How to Join:</strong> Simply show up with a project to share, a question to ask, or just a desire to listen and connect with local builders.
+            <strong>How to Join:</strong> Coming Soon.
           </span>
         </div>
       </>
