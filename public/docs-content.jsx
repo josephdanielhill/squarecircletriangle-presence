@@ -78,7 +78,7 @@ const PAGES = [
               {G.triangle}
             </div>
             <h4>Triangle</h4>
-            <p><strong>Applications.</strong> We build the tools they need next, turning community insights and educational frameworks into lightweight, bespoke applications like DeckCRM, Timecard, and Kostly.</p>
+            <p><strong>Applications.</strong> We build the tools they need next, turning community insights and educational frameworks into lightweight, bespoke applications like DeckCRM, Timecard, Kostly, and Weeklie.</p>
             <span className="arrow">Explore Triangle →</span>
           </a>
         </div>
@@ -315,6 +315,17 @@ const PAGES = [
             </div>
             <h4>Kostly</h4>
             <p>Track software tooling, project cost distribution, and share your stack publicly.</p>
+            <span className="arrow">Learn more →</span>
+          </a>
+          <a className="card" href="#/triangle-weeklie">
+            <div className="card-icon">
+              <svg viewBox="0 0 16 16">
+                <polygon className="fill" points="8,1.4 14.6,14.4 1.4,14.4" />
+                <polygon className="stroke" points="8,1.4 14.6,14.4 1.4,14.4" />
+              </svg>
+            </div>
+            <h4>Weeklie</h4>
+            <p>Plan your work week with intentionality, schedule breaks, and export to iCal.</p>
             <span className="arrow">Learn more →</span>
           </a>
         </div>
@@ -1129,6 +1140,144 @@ const PAGES = [
                   <strong>Initialization</strong>
                   <ul>
                     <li>Initialized project spaces, Linear tasks, and initial Miro concept planning boards.</li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </>
+    ),
+  },
+  {
+    id: 'triangle-weeklie',
+    section: 'Triangle',
+    title: 'Weeklie',
+    eyebrow: 'Triangle · Application',
+    lede: 'Simple work week planning and calendar export to stay balanced and aligned.',
+    updated: 'April 2026 by JH',
+    body: () => (
+      <>
+        <p>
+          Weeklie is a simple web tool designed to help builders and practitioners plan out their work week with intentionality, schedule breaks, and ensure they don't overshoot target hours. It provides a visual, lightweight weekly planner that exports to standard calendar formats (iCal), making it easy to share availability and scheduled blocks with partners or teams.
+        </p>
+
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', margin: '24px 0' }}>
+          <a
+            href="https://weeklie.squarecircletriangle.co/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 20px',
+              background: 'var(--accent-bg)',
+              border: '1px solid var(--accent)',
+              color: 'var(--accent)',
+              borderRadius: '8px',
+              fontWeight: '500',
+              fontSize: '14.5px',
+              textDecoration: 'none',
+              transition: 'background-color 0.2s ease',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--hover)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--accent-bg)';
+            }}
+          >
+            <span>Launch Weeklie</span>
+            <span style={{ fontSize: '12px' }}>↗</span>
+          </a>
+        </div>
+
+        <div className="callout tip">
+          <span className="ico">→</span>
+          <span>
+            <strong>Project Status:</strong> Active micro-app migrated from a Claude Artifact. Deployed on a custom subdomain with support for multiple daily pauses, auto-versioning, and carry-over work hours.
+          </span>
+        </div>
+
+        <h2 id="objective">Objective &amp; Concept</h2>
+        <p>
+          Weeklie was created to solve a personal coordination and pacing problem: planning and communicating weekly work schedules to ensure both work hour intentionality and partner alignment. Rather than managing complex, heavy calendar schedules, Weeklie allows you to build a visual work plan every Sunday, block breaks/pauses, and export the final schedule as a calendar file.
+        </p>
+        <p>
+          The core gameplay loop centers around:
+        </p>
+        <ul>
+          <li><strong>Intentional Planning:</strong> Visualizing your week in advance, matching scheduled slots against target hours so you don't overwork.</li>
+          <li><strong>Multiple Pauses:</strong> Ability to break down the day with multiple pauses/breaks, reflecting real-world schedules.</li>
+          <li><strong>Calendar Export:</strong> Export your planned week to a calendar file and sync it to a dedicated calendar for easy visibility.</li>
+        </ul>
+
+        <h2 id="impulse">The Impulse</h2>
+        <p>
+          This project started its life as an interactive Claude Artifact. After hit restrictions and scaling limitations within the artifact interface, it was migrated into a dedicated standalone repository using Claude Code. This transition highlights the power of modern vibe coding: taking a prototype built fully in chat and wrapping it into a production-ready, subdomain-hosted web application.
+        </p>
+
+        <h2 id="changelog">Changelog &amp; Milestones</h2>
+        <p>
+          An active timeline of the development phases and feature integrations:
+        </p>
+        <div className="tbl">
+          <table>
+            <thead>
+              <tr>
+                <th style={{ width: '130px' }}>Date</th>
+                <th>Changes &amp; Milestones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>26 Apr 2026</td>
+                <td>
+                  <strong>Carry-Over Usability</strong>
+                  <ul>
+                    <li>Made adding and managing Carry-Over work hours easier to set and track.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>20 Apr 2026</td>
+                <td>
+                  <strong>Flexible Pauses</strong>
+                  <ul>
+                    <li>Added support for configuring multiple pauses per day.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>02 Apr 2026</td>
+                <td>
+                  <strong>Carry-Over Logic</strong>
+                  <ul>
+                    <li>Fixed and optimized carry-over time formulas to accurately display positive and negative hour balances.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>01 Apr 2026</td>
+                <td>
+                  <strong>Assets &amp; Articles</strong>
+                  <ul>
+                    <li>Created marketing and visual assets.</li>
+                    <li>Published the conceptual scratchpad post: <a href="https://scrapbook.josephhill.co/3+-+Areas/scrapbook/Scratchpad/pages/2026-03-31+-+Work+Hour+Intentionality" target="_blank" rel="noopener noreferrer">2026-03-31 - Work Hour Intentionality</a>.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>30 Mar 2026</td>
+                <td>
+                  <strong>Project Launch</strong>
+                  <ul>
+                    <li>Created github project from the Claude Artifact.</li>
+                    <li>Implemented marketing landing page and feedback loops.</li>
+                    <li>Configured custom subdomain and automated application versioning.</li>
+                    <li>Switched calendar logic to a CW (Calendar Week) picker.</li>
+                    <li>Added support for marking days off.</li>
                   </ul>
                 </td>
               </tr>
