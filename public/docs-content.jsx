@@ -328,6 +328,17 @@ const PAGES = [
             <p>Plan your work week with intentionality, schedule breaks, and export to iCal.</p>
             <span className="arrow">Learn more →</span>
           </a>
+          <a className="card" href="#/triangle-crewcall">
+            <div className="card-icon">
+              <svg viewBox="0 0 16 16">
+                <polygon className="fill" points="8,1.4 14.6,14.4 1.4,14.4" />
+                <polygon className="stroke" points="8,1.4 14.6,14.4 1.4,14.4" />
+              </svg>
+            </div>
+            <h4>CrewCall</h4>
+            <p>Intelligent interval rowing coach to plan and execute sessions with visual guidance.</p>
+            <span className="arrow">Learn more →</span>
+          </a>
         </div>
         <p>
           Triangle applications are not built in isolation. They emerge from the patterns
@@ -1278,6 +1289,132 @@ const PAGES = [
                     <li>Configured custom subdomain and automated application versioning.</li>
                     <li>Switched calendar logic to a CW (Calendar Week) picker.</li>
                     <li>Added support for marking days off.</li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </>
+    ),
+  },
+  {
+    id: 'triangle-crewcall',
+    section: 'Triangle',
+    title: 'CrewCall',
+    eyebrow: 'Triangle · Application',
+    lede: 'Intelligent interval rowing coach to plan and execute sessions with visual guidance.',
+    updated: 'July 2026 by JH',
+    body: () => (
+      <>
+        <p>
+          CrewCall is an intelligent interval rowing coach designed to help practitioners plan and execute interval rowing training sessions at home without relying on non-EU tech. It acts as a smart companion, auto-scaling session pacing, arrangements, and stroke rate targets, while providing real-time audio guidance to keep your focus entirely on the rowing rhythm.
+        </p>
+
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', margin: '24px 0' }}>
+          <a
+            href="https://crewcall.squarecircletriangle.co/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 20px',
+              background: 'var(--accent-bg)',
+              border: '1px solid var(--accent)',
+              color: 'var(--accent)',
+              borderRadius: '8px',
+              fontWeight: '500',
+              fontSize: '14.5px',
+              textDecoration: 'none',
+              transition: 'background-color 0.2s ease',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--hover)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--accent-bg)';
+            }}
+          >
+            <span>Launch CrewCall</span>
+            <span style={{ fontSize: '12px' }}>↗</span>
+          </a>
+        </div>
+
+        <div className="callout tip">
+          <span className="ico">→</span>
+          <span>
+            <strong>Project Status:</strong> Active micro-app launched in June 2026. Features an advanced workout builder, customizable time blocks, color-coded intensity alerts, looping background videos, and a dedicated non-mobile warnings screen.
+          </span>
+        </div>
+
+        <h2 id="objective">Objective &amp; Concept</h2>
+        <p>
+          Created as a replacement for interval rowing training at home. The core objective is to replace rigid commercial tools (like Apple Fitness) by allowing users to define specific workout timeframes and receive structured guidance on intensity for each phase, helping to build progressive training regimens.
+        </p>
+        <p>
+          The core functionality centers around:
+        </p>
+        <ul>
+          <li><strong>Intelligent Intervals:</strong> Automatically scales the workout layout, pacing, and target stroke rates dynamically based on the total time you define.</li>
+          <li><strong>Audio Cues:</strong> Built-in voice synth guidance and transition alerts keep your eyes focused on your stroke rhythm instead of the screen.</li>
+          <li><strong>Workout Builder:</strong> A fully customizable advanced workout editor where you can fine-tune phases, intensities, and durations, or drag-and-drop blocks.</li>
+          <li><strong>Import &amp; Export:</strong> Save custom workout configurations as JSON files, and upload them later to instantly run or share specific sessions.</li>
+        </ul>
+
+        <h2 id="impulse">The Impulse</h2>
+        <p>
+          When executing interval training, looking down at a phone screen to see the remaining time or target stroke rate is distracting and disrupts the rhythm. CrewCall was born out of a desire to create a clean, web-based tool that works seamlessly on desktop and tablet, utilising audio cues for hands-free, distraction-free training, while staying within a self-owned tech stack.
+        </p>
+
+        <h2 id="design">Design Goals</h2>
+        <div className="dl">
+          <span className="term">Rhythm-First Design</span>
+          <span className="desc">High-contrast, color-coded visual cues that are readable from a distance while rowing.</span>
+
+          <span className="term">Distraction-Free Guidance</span>
+          <span className="desc">Voice synthesis and audio alerts that let you keep your eyes closed or on your posture.</span>
+
+          <span className="term">Highly Flexible</span>
+          <span className="desc">Tailor row-to-rest ratios and configure pause times to match any training progression.</span>
+        </div>
+
+        <h2 id="changelog">Changelog &amp; Milestones</h2>
+        <p>
+          An active timeline of the design phases, feature integrations, and version deployments:
+        </p>
+        <div className="tbl">
+          <table>
+            <thead>
+              <tr>
+                <th style={{ width: '130px' }}>Date</th>
+                <th>Changes &amp; Milestones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>01 Jul 2026</td>
+                <td>
+                  <strong>UX Refinements &amp; Layout Polish</strong>
+                  <ul>
+                    <li>Added a mobile warning screen to prompt users to view the app on web or tablet, with a CTA navigating back to the landing page.</li>
+                    <li>Implemented a collapsible active panel for advanced mode to tighten layout spacing.</li>
+                    <li>Added a looping header background video with a frosted-glass blur effect on the landing page.</li>
+                    <li>Implemented session pause/break functionality.</li>
+                    <li>Added color-coded feedback to the advanced editor.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>30 Jun 2026</td>
+                <td>
+                  <strong>Project Launch</strong>
+                  <ul>
+                    <li>Created the base design and repository.</li>
+                    <li>Configured the custom subdomain <code>crewcall.squarecircletriangle.co</code>.</li>
+                    <li>Added the project scrapbook page.</li>
+                    <li>Implemented import and export features for workout configurations.</li>
                   </ul>
                 </td>
               </tr>
