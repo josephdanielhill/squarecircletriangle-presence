@@ -1345,7 +1345,7 @@ const PAGES = [
         <div className="callout tip">
           <span className="ico">→</span>
           <span>
-            <strong>Project Status:</strong> Active micro-app launched in June 2026. Features an advanced workout builder, customizable time blocks, color-coded intensity alerts, looping background videos, and a dedicated non-mobile warnings screen.
+            <strong>Project Status:</strong> Active micro-app launched in June 2026. Features a questionnaire-based Smart Session Builder, an advanced workout builder, customizable time blocks, color-coded intensity alerts, looping background videos, a dedicated mobile warning screen, and auditory guides.
           </span>
         </div>
 
@@ -1357,9 +1357,11 @@ const PAGES = [
           The core functionality centers around:
         </p>
         <ul>
+          <li><strong>Smart Session Builder:</strong> A questionnaire-based generator that auto-builds customized workout routines based on user goals, intensity preference, and target duration.</li>
           <li><strong>Intelligent Intervals:</strong> Automatically scales the workout layout, pacing, and target stroke rates dynamically based on the total time you define.</li>
-          <li><strong>Audio Cues:</strong> Built-in voice synth guidance and transition alerts keep your eyes focused on your stroke rhythm instead of the screen.</li>
+          <li><strong>Audio Cues:</strong> Built-in voice synth guidance, transition alerts, 5-second countdown beeps, and a 10-second initiation interval to get set up before starting.</li>
           <li><strong>Workout Builder:</strong> A fully customizable advanced workout editor where you can fine-tune phases, intensities, and durations, or drag-and-drop blocks.</li>
+          <li><strong>Freestyle Intervals:</strong> Unstructured training blocks to allow free-form pacing alongside standard intensity targets.</li>
           <li><strong>Import &amp; Export:</strong> Save custom workout configurations as JSON files, and upload them later to instantly run or share specific sessions.</li>
         </ul>
 
@@ -1394,10 +1396,24 @@ const PAGES = [
             </thead>
             <tbody>
               <tr>
+                <td>08 Jul 2026</td>
+                <td>
+                  <strong>Session Customization &amp; Audio Pacing</strong>
+                  <ul>
+                    <li>Moved the panel collapse button to be front and center for improved ergonomics and panel control.</li>
+                    <li>Added a "Freestyle" interval type for unstructured, free-form workouts.</li>
+                    <li>Implemented a 5-second countdown beep before interval transitions.</li>
+                    <li>Added a 10-second initiation countdown before the session starts to allow users to get in position.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
                 <td>01 Jul 2026</td>
                 <td>
-                  <strong>UX Refinements &amp; Layout Polish</strong>
+                  <strong>Smart Builder &amp; UX Polish</strong>
                   <ul>
+                    <li>Implemented a questionnaire-based Smart Session Builder to automatically generate custom routines based on user goals.</li>
+                    <li>Added inline advanced block insertion with scroll position preservation.</li>
                     <li>Added a mobile warning screen to prompt users to view the app on web or tablet, with a CTA navigating back to the landing page.</li>
                     <li>Implemented a collapsible active panel for advanced mode to tighten layout spacing.</li>
                     <li>Added a looping header background video with a frosted-glass blur effect on the landing page.</li>
