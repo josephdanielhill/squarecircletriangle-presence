@@ -319,6 +319,18 @@ function PageView({ page }) {
         </div>
       )}
 
+      {page.eyebrow === 'Triangle · Application' && (
+        <a
+          className="feedback-cta"
+          href="https://tally.so/r/zxNrGM"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>Feedback / Support</span>
+          <span className="feedback-cta-arrow">↗</span>
+        </a>
+      )}
+
       <div className="prose">{page.body()}</div>
 
       {(prev || next) && (
