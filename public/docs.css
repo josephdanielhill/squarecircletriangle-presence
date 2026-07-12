@@ -308,6 +308,15 @@ button { font-family: inherit; }
   align-items: center;
   gap: 10px;
 }
+.sidebar-footer-link {
+  margin-left: auto;
+  color: var(--muted);
+  text-decoration: none;
+}
+.sidebar-footer-link:hover,
+.sidebar-footer-link.active {
+  color: var(--accent);
+}
 
 /* ─────────── Main content ─────────── */
 .main {

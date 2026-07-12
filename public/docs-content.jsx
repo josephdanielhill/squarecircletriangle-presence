@@ -1590,6 +1590,92 @@ const PAGES = [
       </>
     ),
   },
+  {
+    id: 'privacy',
+    section: 'Home',
+    title: 'Privacy Policy',
+    eyebrow: 'Legal',
+    lede: 'How SquareCircleTriangle collects, uses, and protects information across this site and its applications.',
+    updated: 'July 2026 by JH',
+    body: () => (
+      <>
+        <p>
+          This Privacy Policy explains what information SquareCircleTriangle ("we", "us") collects
+          when you visit squarecircletriangle.co and its subdomains (including the Square, Circle,
+          and Triangle applications), and how that information is used.
+        </p>
+
+        <h2 id="analytics">Website Analytics</h2>
+        <p>
+          We use <a className="inline" href="https://usefathom.com/" target="_blank" rel="noopener noreferrer">Fathom Analytics</a> to
+          understand overall traffic patterns, such as which pages are popular and where visitors
+          come from. Fathom is a privacy-first analytics service that does not use cookies and does
+          not track or profile individuals across websites or devices.
+        </p>
+        <div className="callout tip">
+          <span className="ico">→</span>
+          <span>
+            Fathom does not collect any personally identifiable information (PII). Visitors are
+            never tracked across other websites, and no persistent identifiers are stored in your
+            browser for analytics purposes.
+          </span>
+        </div>
+        <p>
+          The data Fathom aggregates includes anonymized/hashed information such as approximate
+          location (country/region, derived from IP address, which is discarded after processing),
+          browser and device type, referring site, and pages visited. This information cannot be
+          used to identify you individually. You can read more in{' '}
+          <a className="inline" href="https://usefathom.com/privacy" target="_blank" rel="noopener noreferrer">Fathom's own privacy policy</a>.
+        </p>
+
+        <h2 id="cookies">Cookies</h2>
+        <p>
+          This site does not set analytics or advertising cookies. Any cookies used are strictly
+          those necessary for the applications under the Triangle discipline (e.g. DeckCRM,
+          Timecard, Kostly, Weeklie, CrewCall) to function, such as session or authentication
+          cookies where a user account is involved. Each application's own scope may set additional
+          functional cookies necessary to deliver the service you request.
+        </p>
+
+        <h2 id="data-we-collect">Other Information We Collect</h2>
+        <p>
+          Where you voluntarily provide information to us — for example via a contact form,
+          feedback form, or by signing up for one of the Triangle applications — we collect only
+          what is necessary to respond to you or provide the service, such as your name, email
+          address, and the content of your message. We do not sell or share this information with
+          third parties for marketing purposes.
+        </p>
+
+        <h2 id="third-parties">Third-Party Services</h2>
+        <p>
+          Some pages link out to third-party services (such as Tally for feedback forms, or hosted
+          subdomains for individual applications). Those services have their own privacy policies
+          governing any information you provide directly to them.
+        </p>
+
+        <h2 id="your-rights">Your Rights</h2>
+        <p>
+          Depending on your jurisdiction, you may have rights to access, correct, or request
+          deletion of personal information we hold about you. Because our analytics provider does
+          not collect personal data, there is generally nothing to request in relation to site
+          analytics. For any other data you have shared with us directly, contact us using the
+          details below.
+        </p>
+
+        <h2 id="changes">Changes to This Policy</h2>
+        <p>
+          We may update this policy from time to time as our practices or applicable law changes.
+          The "Last updated" date at the top of this page reflects the most recent revision.
+        </p>
+
+        <h2 id="contact">Contact</h2>
+        <p>
+          If you have questions about this Privacy Policy or how your information is handled,
+          please reach out via the feedback links available on the individual application pages.
+        </p>
+      </>
+    ),
+  },
 ];
 
 window.SCT_PAGES = PAGES;

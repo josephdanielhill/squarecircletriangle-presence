@@ -196,6 +196,7 @@ function Sidebar({ currentId, open, onClose }) {
       <div className="sidebar-footer">
         <BrandMark />
         <span>SquareCircleTriangle.co</span>
+        <a href="#/privacy" className={'sidebar-footer-link' + (currentId === 'privacy' ? ' active' : '')}>Privacy Policy</a>
       </div>
     </aside>
   );
