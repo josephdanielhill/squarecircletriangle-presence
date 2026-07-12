@@ -397,24 +397,6 @@ h1.page-title {
 }
 .page-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--muted-2); }
 
-.feedback-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
-  margin: 0 0 32px;
-  background: var(--accent-bg);
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 14px;
-  text-decoration: none;
-  transition: background-color 0.2s ease;
-}
-.feedback-cta:hover { background: var(--hover); }
-.feedback-cta-arrow { font-size: 12px; }
-
 /* Prose */
 .prose h2 {
   font-family: var(--ff-display);

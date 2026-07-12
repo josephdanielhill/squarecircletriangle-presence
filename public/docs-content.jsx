@@ -361,7 +361,7 @@ const PAGES = [
           DeckCRM is a lightweight personal relationship manager designed for relationship-led work. It is built around the core insight that our most valuable connections live in informal exchanges, email threads, and meeting notes, rather than in rigid enterprise CRM records.
         </p>
 
-        <div style={{ margin: '24px 0' }}>
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', margin: '24px 0' }}>
           <a
             href="https://deckcrm.squarecircletriangle.co/"
             target="_blank"
@@ -388,6 +388,36 @@ const PAGES = [
             }}
           >
             <span>Launch DeckCRM</span>
+            <span style={{ fontSize: '12px' }}>↗</span>
+          </a>
+          <a
+            href="https://tally.so/r/zxNrGM"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 20px',
+              background: 'transparent',
+              border: '1px solid var(--rule)',
+              color: 'var(--fg)',
+              borderRadius: '8px',
+              fontWeight: '500',
+              fontSize: '14.5px',
+              textDecoration: 'none',
+              transition: 'background-color 0.2s ease, border-color 0.2s ease',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--hover)';
+              e.currentTarget.style.borderColor = 'var(--muted)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.borderColor = 'var(--rule)';
+            }}
+          >
+            <span>Feedback / Support</span>
             <span style={{ fontSize: '12px' }}>↗</span>
           </a>
         </div>
@@ -741,7 +771,7 @@ const PAGES = [
           Continuing to "own" my own stack, Timecard is a simple time and context-based tool designed to log and associate time with specific activities, enabling practitioners and small teams to reflect on and understand their time investments across various topics and themes.
         </p>
 
-        <div style={{ margin: '24px 0' }}>
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', margin: '24px 0' }}>
           <a
             href="https://timecard.squarecircletriangle.co/"
             target="_blank"
@@ -768,6 +798,36 @@ const PAGES = [
             }}
           >
             <span>Launch Timecard</span>
+            <span style={{ fontSize: '12px' }}>↗</span>
+          </a>
+          <a
+            href="https://tally.so/r/zxNrGM"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 20px',
+              background: 'transparent',
+              border: '1px solid var(--rule)',
+              color: 'var(--fg)',
+              borderRadius: '8px',
+              fontWeight: '500',
+              fontSize: '14.5px',
+              textDecoration: 'none',
+              transition: 'background-color 0.2s ease, border-color 0.2s ease',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--hover)';
+              e.currentTarget.style.borderColor = 'var(--muted)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.borderColor = 'var(--rule)';
+            }}
+          >
+            <span>Feedback / Support</span>
             <span style={{ fontSize: '12px' }}>↗</span>
           </a>
         </div>
@@ -977,6 +1037,36 @@ const PAGES = [
             }}
           >
             <span>Explore Stack Index</span>
+            <span style={{ fontSize: '12px' }}>↗</span>
+          </a>
+          <a
+            href="https://tally.so/r/zxNrGM"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 20px',
+              background: 'transparent',
+              border: '1px solid var(--rule)',
+              color: 'var(--fg)',
+              borderRadius: '8px',
+              fontWeight: '500',
+              fontSize: '14.5px',
+              textDecoration: 'none',
+              transition: 'background-color 0.2s ease, border-color 0.2s ease',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--hover)';
+              e.currentTarget.style.borderColor = 'var(--muted)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.borderColor = 'var(--rule)';
+            }}
+          >
+            <span>Feedback / Support</span>
             <span style={{ fontSize: '12px' }}>↗</span>
           </a>
         </div>
@@ -1202,6 +1292,36 @@ const PAGES = [
             <span>Launch Weeklie</span>
             <span style={{ fontSize: '12px' }}>↗</span>
           </a>
+          <a
+            href="https://tally.so/r/zxNrGM"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 20px',
+              background: 'transparent',
+              border: '1px solid var(--rule)',
+              color: 'var(--fg)',
+              borderRadius: '8px',
+              fontWeight: '500',
+              fontSize: '14.5px',
+              textDecoration: 'none',
+              transition: 'background-color 0.2s ease, border-color 0.2s ease',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--hover)';
+              e.currentTarget.style.borderColor = 'var(--muted)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.borderColor = 'var(--rule)';
+            }}
+          >
+            <span>Feedback / Support</span>
+            <span style={{ fontSize: '12px' }}>↗</span>
+          </a>
         </div>
 
         <div className="callout tip">
@@ -1338,6 +1458,36 @@ const PAGES = [
             }}
           >
             <span>Launch CrewCall</span>
+            <span style={{ fontSize: '12px' }}>↗</span>
+          </a>
+          <a
+            href="https://tally.so/r/zxNrGM"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 20px',
+              background: 'transparent',
+              border: '1px solid var(--rule)',
+              color: 'var(--fg)',
+              borderRadius: '8px',
+              fontWeight: '500',
+              fontSize: '14.5px',
+              textDecoration: 'none',
+              transition: 'background-color 0.2s ease, border-color 0.2s ease',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--hover)';
+              e.currentTarget.style.borderColor = 'var(--muted)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.borderColor = 'var(--rule)';
+            }}
+          >
+            <span>Feedback / Support</span>
             <span style={{ fontSize: '12px' }}>↗</span>
           </a>
         </div>
