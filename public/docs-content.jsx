@@ -78,7 +78,7 @@ const PAGES = [
               {G.triangle}
             </div>
             <h4>Triangle</h4>
-            <p><strong>Applications.</strong> We build the tools they need next, turning community insights and educational frameworks into lightweight, bespoke applications like DeckCRM, Timecard, Kostly, and Weeklie.</p>
+            <p><strong>Applications.</strong> We build the tools they need next, turning community insights and educational frameworks into lightweight, bespoke applications like DeckCRM, Timecard, Kostly, Weeklie, CrewCall, and Reflectify.</p>
             <span className="arrow">Explore Triangle →</span>
           </a>
         </div>
@@ -337,6 +337,17 @@ const PAGES = [
             </div>
             <h4>CrewCall</h4>
             <p>Intelligent interval rowing coach to plan and execute sessions with visual guidance.</p>
+            <span className="arrow">Learn more →</span>
+          </a>
+          <a className="card" href="#/triangle-reflectify">
+            <div className="card-icon">
+              <svg viewBox="0 0 16 16">
+                <polygon className="fill" points="8,1.4 14.6,14.4 1.4,14.4" />
+                <polygon className="stroke" points="8,1.4 14.6,14.4 1.4,14.4" />
+              </svg>
+            </div>
+            <h4>Reflectify</h4>
+            <p>A simple two-step experience to reflect on your professional career and generate a rich report.</p>
             <span className="arrow">Learn more →</span>
           </a>
         </div>
@@ -1591,6 +1602,110 @@ const PAGES = [
     ),
   },
   {
+    id: 'triangle-reflectify',
+    section: 'Triangle',
+    title: 'Reflectify',
+    eyebrow: 'Triangle · Application',
+    lede: 'A simple two-step experience to reflect on your professional career and generate a rich report.',
+    updated: 'July 2026 by JH',
+    body: () => (
+      <>
+        <p>
+          Reflectify is a lightweight web experience designed to facilitate deep professional reflection. By providing a structured, customizable prompt to feed into your favorite AI model, it generates a comprehensive dataset which you then upload back into Reflectify to unlock a rich, interactive career report.
+        </p>
+
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', margin: '24px 0' }}>
+          <a
+            href="https://reflectify.squarecircletriangle.co/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 20px',
+              background: 'var(--accent-bg)',
+              border: '1px solid var(--accent)',
+              color: 'var(--accent)',
+              borderRadius: '8px',
+              fontWeight: '500',
+              fontSize: '14.5px',
+              textDecoration: 'none',
+              transition: 'background-color 0.2s ease',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--hover)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--accent-bg)';
+            }}
+          >
+            <span>Launch Reflectify</span>
+            <span style={{ fontSize: '12px' }}>↗</span>
+          </a>
+        </div>
+
+        <div className="callout tip">
+          <span className="ico">→</span>
+          <span>
+            <strong>Project Status:</strong> Active micro-app launched in July 2026. Features prompt generation, multi-language support (English and German), and secure local JSON parsing to generate rich interactive career reports.
+          </span>
+        </div>
+
+        <h2 id="objective">Objective &amp; Concept</h2>
+        <p>
+          The objective of Reflectify is to create a simple, privacy-focused, two-step process for professional self-reflection:
+        </p>
+        <ol>
+          <li><strong>Generate Prompt:</strong> Users get a carefully crafted, structured prompt to input into an AI model of their choice (e.g., ChatGPT, Claude, Gemini).</li>
+          <li><strong>Generate Report:</strong> The AI processes the prompt and outputs a structured JSON file. Users upload this JSON back to Reflectify to generate a highly visual, comprehensive career report offline in their browser.</li>
+        </ol>
+
+        <h2 id="impulse">The Impulse</h2>
+        <p>
+          Reflecting on one's career path can be a daunting, unstructured task. Traditional performance reviews are often backwards-looking and company-centric. Reflectify was built to give individuals a personal, structured space to analyze their accomplishments, identify growth areas, and project future paths, without sacrificing data privacy by processing everything client-side.
+        </p>
+
+        <h2 id="changelog">Changelog &amp; Milestones</h2>
+        <p>
+          An active timeline of the design phases, feature integrations, and version deployments:
+        </p>
+        <div className="tbl">
+          <table>
+            <thead>
+              <tr>
+                <th style={{ width: '130px' }}>Date</th>
+                <th>Changes &amp; Milestones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>13 Jul 2026</td>
+                <td>
+                  <strong>Domain Setup &amp; Localization</strong>
+                  <ul>
+                    <li>Configured the custom subdomain <code>reflectify.squarecircletriangle.co</code>.</li>
+                    <li>Added language support for the prompt to allow multi-language reflections.</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>12 Jul 2026</td>
+                <td>
+                  <strong>Project Genesis</strong>
+                  <ul>
+                    <li>Created the project scrapbook page.</li>
+                    <li>Built the proof-of-concept (PoC) client-side parser and prompt generator.</li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </>
+    ),
+  },
+  {
     id: 'privacy',
     section: 'Home',
     title: 'Privacy Policy',
@@ -1632,7 +1747,7 @@ const PAGES = [
         <p>
           This site does not set analytics or advertising cookies. Any cookies used are strictly
           those necessary for the applications under the Triangle discipline (e.g. DeckCRM,
-          Timecard, Kostly, Weeklie, CrewCall) to function, such as session or authentication
+          Timecard, Kostly, Weeklie, CrewCall, Reflectify) to function, such as session or authentication
           cookies where a user account is involved. Each application's own scope may set additional
           functional cookies necessary to deliver the service you request.
         </p>
