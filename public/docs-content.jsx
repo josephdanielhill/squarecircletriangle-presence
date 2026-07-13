@@ -1643,6 +1643,36 @@ const PAGES = [
             <span>Launch Reflectify</span>
             <span style={{ fontSize: '12px' }}>↗</span>
           </a>
+          <a
+            href="https://tally.so/r/zxNrGM"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 20px',
+              background: 'transparent',
+              border: '1px solid var(--rule)',
+              color: 'var(--fg)',
+              borderRadius: '8px',
+              fontWeight: '500',
+              fontSize: '14.5px',
+              textDecoration: 'none',
+              transition: 'background-color 0.2s ease, border-color 0.2s ease',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--hover)';
+              e.currentTarget.style.borderColor = 'var(--muted)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.borderColor = 'var(--rule)';
+            }}
+          >
+            <span>Feedback / Support</span>
+            <span style={{ fontSize: '12px' }}>↗</span>
+          </a>
         </div>
 
         <div className="callout tip">
