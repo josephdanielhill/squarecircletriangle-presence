@@ -1,4 +1,4 @@
-import { createRemoteJWKSet, jwtVerify, type JWTPayload } from 'jose';
+import { createRemoteJWKSet, decodeJwt, jwtVerify, type JWTPayload } from 'jose';
 import type { Env } from './types';
 
 // createRemoteJWKSet caches the fetched key set in-module, so as long as the
@@ -48,13 +48,23 @@ export async function requireAdmin(request: Request, env: Env): Promise<JWTPaylo
     });
     payload = result.payload;
   } catch (err) {
-    // Temporarily includes the underlying jose/JWKS error and the
-    // non-secret config values in use, to make first-time setup against a
-    // real Neon Auth project debuggable. Tighten this back to a generic
-    // message once login is confirmed working end to end.
+    // Temporarily includes the underlying jose/JWKS error, the non-secret
+    // config values in use, and an UNVERIFIED decode of the token's own
+    // claims (safe to expose -- this is not cryptographic verification, just
+    // reading the payload -- and only ever shown to the person holding this
+    // exact token) to make first-time setup against a real Neon Auth project
+    // debuggable. Tighten this back to a generic message once login is
+    // confirmed working end to end.
     const detail = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+    let tokenClaims = '(could not decode token)';
+    try {
+      const unverified = decodeJwt(match[1]);
+      tokenClaims = `iss=${unverified.iss ?? '(none)'}, aud=${JSON.stringify(unverified.aud) ?? '(none)'}`;
+    } catch {
+      // leave default message
+    }
     throw new AuthError(
-      `Invalid or expired session token (${detail}) [jwksUrl=${env.NEON_AUTH_JWKS_URL || '(unset)'}, issuer=${env.NEON_AUTH_ISSUER || '(unset)'}]`
+      `Invalid or expired session token (${detail}) [configured: jwksUrl=${env.NEON_AUTH_JWKS_URL || '(unset)'}, issuer=${env.NEON_AUTH_ISSUER || '(unset)'}] [token claims: ${tokenClaims}]`
     );
   }
 
