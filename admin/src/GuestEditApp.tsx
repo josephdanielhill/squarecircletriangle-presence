@@ -21,7 +21,14 @@ export function GuestEditApp() {
   const [status, setStatus] = useState<'loading' | 'ready' | 'invalid' | 'submitted'>('loading');
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [savingProgress, setSavingProgress] = useState(false);
+  const [savedMessage, setSavedMessage] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(true);
+
+  const updateBlocks = (next: Block[]) => {
+    setBlocks(next);
+    setSavedMessage(null);
+  };
 
   useEffect(() => {
     if (!token) { setStatus('invalid'); setError('No edit link token provided.'); return; }
@@ -47,6 +54,19 @@ export function GuestEditApp() {
       setError(e.message || 'Failed to submit your edit.');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const saveProgress = async () => {
+    setSavingProgress(true);
+    setError(null);
+    try {
+      await guestApi.saveProgress(token, blocks);
+      setSavedMessage('Progress saved -- your edits are private until you submit for review.');
+    } catch (e: any) {
+      setError(e.message || 'Failed to save your progress.');
+    } finally {
+      setSavingProgress(false);
     }
   };
 
@@ -83,14 +103,19 @@ export function GuestEditApp() {
           <div className="field-hint">Editing</div>
           <h1>{pageTitle}</h1>
         </div>
-        <button className="btn-primary" onClick={submit} disabled={saving}>
-          {saving ? 'Submitting…' : 'Submit for review'}
-        </button>
+        <div className="page-header-actions">
+          <button className="btn-secondary" onClick={saveProgress} disabled={saving || savingProgress}>
+            {savingProgress ? 'Saving…' : 'Save progress'}
+          </button>
+          <button className="btn-primary" onClick={submit} disabled={saving || savingProgress}>
+            {saving ? 'Submitting…' : 'Submit for review'}
+          </button>
+        </div>
       </header>
       <p className="field-hint">
-        Your changes are submitted for review and won't go live until approved.
-        You can keep editing and resubmit at any time before it's reviewed.
+        "Save progress" keeps your edits private so you can pick up later -- only "Submit for review" sends them to be reviewed and published.
       </p>
+      {savedMessage && <p className="field-hint">{savedMessage}</p>}
       {error && <p className="error-text">{error}</p>}
       <div className={'editor-split' + (showPreview ? '' : ' no-preview')}>
         <div className="editor-col">
@@ -98,7 +123,7 @@ export function GuestEditApp() {
             <span>Content</span>
             {!showPreview && <button className="btn-link" onClick={() => setShowPreview(true)}>Show preview</button>}
           </div>
-          <BlockEditor blocks={blocks} onChange={setBlocks} />
+          <BlockEditor blocks={blocks} onChange={updateBlocks} />
         </div>
         {showPreview && (
           <div className="preview-col">
