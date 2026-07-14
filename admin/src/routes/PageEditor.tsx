@@ -68,8 +68,12 @@ export function PageEditor({ pageId }: { pageId: string }) {
       </div>
 
       {tab === 'content' ? (
-        <div className="editor-split">
+        <div className={'editor-split' + (showPreview ? '' : ' no-preview')}>
           <div className="editor-col">
+            <div className="preview-head">
+              <span>Content</span>
+              {!showPreview && <button className="btn-link" onClick={() => setShowPreview(true)}>Show preview</button>}
+            </div>
             <BlockEditor blocks={blocks} onChange={setBlocks} />
           </div>
           {showPreview && (
@@ -83,9 +87,6 @@ export function PageEditor({ pageId }: { pageId: string }) {
                 <BlockRenderer blocks={blocks} />
               </div>
             </div>
-          )}
-          {!showPreview && (
-            <button className="btn-link" onClick={() => setShowPreview(true)}>Show preview</button>
           )}
         </div>
       ) : (
