@@ -313,7 +313,10 @@ const PAGES = [
                 <polygon className="stroke" points="8,1.4 14.6,14.4 1.4,14.4" />
               </svg>
             </div>
-            <h4>Kostly</h4>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+              <h4 style={{ margin: 0 }}>Kostly</h4>
+              <span style={{ fontSize: '10.5px', fontFamily: 'var(--ff-mono)', color: 'var(--muted)', background: 'var(--rule)', padding: '1px 6px', borderRadius: '4px' }}>SUNSET</span>
+            </div>
             <p>Track software tooling, project cost distribution, and share your stack publicly.</p>
             <span className="arrow">Learn more →</span>
           </a>
@@ -984,9 +987,16 @@ const PAGES = [
     title: 'Kostly',
     eyebrow: 'Triangle · Application',
     lede: 'Track software tooling, project cost distribution, and share your stack publicly.',
-    updated: 'April 2026 by JH',
+    updated: 'July 2026 by JH',
     body: () => (
       <>
+        <div className="callout warn">
+          <span className="ico">!</span>
+          <span>
+            <strong>Project Sunset:</strong> Kostly has been sunset. The hosted application is no longer active, but this case study and the documentation below are preserved for historical reference.
+          </span>
+        </div>
+
         <p>
           Kostly is a simple tool designed to enable builders and teams to track exactly what software tooling is utilized for which project. It displays precise cost distributions and generates a public profile page to share this stack index transparently, supporting a true "build in the open" ethos.
         </p>
@@ -1082,10 +1092,10 @@ const PAGES = [
           </a>
         </div>
 
-        <div className="callout tip">
-          <span className="ico">→</span>
+        <div className="callout warn">
+          <span className="ico">!</span>
           <span>
-            <strong>Project Status:</strong> Active micro-app launched publicly. Deployed in March 2026 with full project-tool cost distribution graphs, upcoming renewal email/bubble alerts, and a global Stack Index.
+            <strong>Project Status:</strong> Sunset. Deployed in March 2026 with full project-tool cost distribution graphs, renewal email alerts, and a global Stack Index. This micro-app has now been retired.
           </span>
         </div>
 
@@ -1111,6 +1121,14 @@ const PAGES = [
         </p>
         <p>
           Additionally, Kostly introduced a collaborative Stack Index, inviting the public to review, discover, and share how their software stack makes them feel and what value they actually derive from each subscription.
+        </p>
+
+        <h2 id="sunset-decision">The Decision to Sunset</h2>
+        <p>
+          After running the project for several months, the decision was made to sunset Kostly. In practice, the initial implementation's data structure created disproportionately high database hosting expenses, requiring an optimization and refactoring phase that was not a priority to pursue at the time.
+        </p>
+        <p>
+          Rather than maintaining a high-cost database, the hosted version was retired with the plan to potentially resurface a similar tool index concept in a more sustainable architecture in the future. The project remains a highly valuable learning experience, yielding key insights into database scalability under load, rapid MVP deployment, and AI-assisted workflow optimization.
         </p>
 
         <h2 id="development-pipeline">Pipeline &amp; Velocity</h2>
@@ -1141,6 +1159,16 @@ const PAGES = [
               </tr>
             </thead>
             <tbody>
+              <tr>
+                <td>14 Jul 2026</td>
+                <td>
+                  <strong>Project Sunset</strong>
+                  <ul>
+                    <li>Retired the hosted application due to database scaling costs.</li>
+                    <li>Archived the codebase and cost indexing system.</li>
+                  </ul>
+                </td>
+              </tr>
               <tr>
                 <td>01 Apr 2026</td>
                 <td>
