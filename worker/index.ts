@@ -6,6 +6,15 @@ import type { Env } from './types';
 
 const app = new Hono<{ Bindings: Env }>();
 
+// Surface the real error message in the response body (in addition to
+// logging it) instead of Hono's generic "Internal Server Error" text -- this
+// is a small, low-risk diagnostic aid while the CMS is being wired up
+// against a real Neon/Neon Auth project for the first time.
+app.onError((err, c) => {
+  console.error('Unhandled error:', err);
+  return c.json({ error: err.message || 'Internal error', name: err.name }, 500);
+});
+
 app.route('/api', publicRoutes);
 app.route('/api/admin', adminRoutes);
 app.route('/api/guest', guestRoutes);
