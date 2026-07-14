@@ -47,8 +47,15 @@ export async function requireAdmin(request: Request, env: Env): Promise<JWTPaylo
       issuer: env.NEON_AUTH_ISSUER,
     });
     payload = result.payload;
-  } catch {
-    throw new AuthError('Invalid or expired session token');
+  } catch (err) {
+    // Temporarily includes the underlying jose/JWKS error and the
+    // non-secret config values in use, to make first-time setup against a
+    // real Neon Auth project debuggable. Tighten this back to a generic
+    // message once login is confirmed working end to end.
+    const detail = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+    throw new AuthError(
+      `Invalid or expired session token (${detail}) [jwksUrl=${env.NEON_AUTH_JWKS_URL || '(unset)'}, issuer=${env.NEON_AUTH_ISSUER || '(unset)'}]`
+    );
   }
 
   const email = typeof payload.email === 'string' ? payload.email : undefined;
