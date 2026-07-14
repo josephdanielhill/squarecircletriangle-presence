@@ -202,6 +202,7 @@ function Sidebar({ pages, currentId, open, onClose }) {
                   ))}
                 </div>
               )}
+              <div className="nav-home-divider" aria-hidden="true" />
             </React.Fragment>
           );
         }

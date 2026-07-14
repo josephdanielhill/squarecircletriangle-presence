@@ -231,10 +231,7 @@ button { font-family: inherit; }
   color: var(--accent);
 }
 .nav-home .nav-home-icon { display: inline-flex; flex: 0 0 14px; color: currentColor; }
-.nav-home + .nav-group { margin-top: 2px; }
-.nav-home + .nav-group::before {
-  content: '';
-  display: block;
+.nav-home-divider {
   height: 1px;
   background: var(--rule);
   margin: 4px 6px 10px;
