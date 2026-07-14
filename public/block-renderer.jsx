@@ -142,6 +142,48 @@ function ProfileCardBlock({ block }) {
   );
 }
 
+// Extracts a YouTube video ID from any of the common URL shapes people
+// paste (watch, youtu.be, embed, shorts). Mirrored in
+// admin/src/lib/blocks.ts for the editor.
+function youTubeIdFromUrl(url) {
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    const host = u.hostname.replace(/^www\./, '');
+    if (host === 'youtu.be') {
+      return u.pathname.slice(1).split('/')[0] || null;
+    }
+    if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'music.youtube.com') {
+      if (u.pathname === '/watch') return u.searchParams.get('v');
+      const embedMatch = u.pathname.match(/^\/(embed|shorts)\/([^/]+)/);
+      if (embedMatch) return embedMatch[2];
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+function EmbedBlock({ block }) {
+  const videoId = youTubeIdFromUrl(block.url);
+  if (!videoId) {
+    return <div className="embed-error">Couldn't recognize a YouTube URL: {block.url || '(empty)'}</div>;
+  }
+  return (
+    <figure className="video-embed">
+      <div className="video-embed-frame">
+        <iframe
+          src={'https://www.youtube-nocookie.com/embed/' + videoId}
+          title={block.caption || 'YouTube video'}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        />
+      </div>
+      {block.caption && <figcaption>{block.caption}</figcaption>}
+    </figure>
+  );
+}
+
 function BlockView({ block }) {
   switch (block.type) {
     case 'heading': {
@@ -193,6 +235,8 @@ function BlockView({ block }) {
           {block.caption && <figcaption>{block.caption}</figcaption>}
         </figure>
       );
+    case 'embed':
+      return <EmbedBlock block={block} />;
     case 'divider':
       return <hr className="divider" />;
     default:

@@ -1,4 +1,5 @@
 import type { Block, CardGridCard } from '../lib/blocks';
+import { youTubeIdFromUrl } from '../lib/blocks';
 import { ArrayEditor, RichTextField, TextField } from './fields';
 
 export function BlockFields({ block, onChange }: { block: Block; onChange: (b: Block) => void }) {
@@ -224,6 +225,24 @@ export function BlockFields({ block, onChange }: { block: Block; onChange: (b: B
           <TextField label="Caption (optional)" value={block.caption || ''} onChange={(caption) => onChange({ ...block, caption })} />
         </div>
       );
+
+    case 'embed': {
+      const videoId = youTubeIdFromUrl(block.url);
+      return (
+        <div className="fields-grid">
+          <TextField
+            label="YouTube URL"
+            value={block.url}
+            placeholder="https://www.youtube.com/watch?v=…"
+            onChange={(url) => onChange({ ...block, url })}
+          />
+          {block.url && !videoId && (
+            <p className="error-text">Doesn't look like a YouTube link -- paste the video's watch/share URL.</p>
+          )}
+          <TextField label="Caption (optional)" value={block.caption || ''} onChange={(caption) => onChange({ ...block, caption })} />
+        </div>
+      );
+    }
 
     case 'divider':
       return <p className="field-hint">A horizontal divider line. No fields.</p>;

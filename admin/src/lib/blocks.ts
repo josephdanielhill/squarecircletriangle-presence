@@ -12,6 +12,7 @@ export const BLOCK_TYPES = [
   'button_row',
   'profile_card',
   'image',
+  'embed',
   'divider',
 ] as const;
 
@@ -29,6 +30,7 @@ export const BLOCK_TYPE_LABELS: Record<BlockType, string> = {
   button_row: 'Button row',
   profile_card: 'Profile card',
   image: 'Image',
+  embed: 'Embed (YouTube)',
   divider: 'Divider',
 };
 
@@ -54,12 +56,38 @@ export interface ButtonRowButton { label: string; href: string; style: 'primary'
 export interface ButtonRowBlock { id: string; type: 'button_row'; buttons: ButtonRowButton[] }
 export interface ProfileCardBlock { id: string; type: 'profile_card'; avatarInitials: string; name: string; role: string; bio: RichText }
 export interface ImageBlock { id: string; type: 'image'; src: string; alt: string; caption?: string }
+export interface EmbedBlock { id: string; type: 'embed'; url: string; caption?: string }
 export interface DividerBlock { id: string; type: 'divider' }
 
 export type Block =
   | HeadingBlock | ParagraphBlock | ListBlock | CardGridBlock | CalloutBlock
   | DefinitionListBlock | ChangelogTableBlock | TableBlock | ButtonRowBlock
-  | ProfileCardBlock | ImageBlock | DividerBlock;
+  | ProfileCardBlock | ImageBlock | EmbedBlock | DividerBlock;
+
+/**
+ * Extracts a YouTube video ID from any of the common URL shapes people
+ * paste (watch, youtu.be, embed, shorts). Returns null if the URL isn't
+ * recognized as a YouTube link -- mirrored in public/block-renderer.jsx and
+ * admin/src/components/BlockRenderer.tsx for rendering.
+ */
+export function youTubeIdFromUrl(url: string): string | null {
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    const host = u.hostname.replace(/^www\./, '');
+    if (host === 'youtu.be') {
+      return u.pathname.slice(1).split('/')[0] || null;
+    }
+    if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'music.youtube.com') {
+      if (u.pathname === '/watch') return u.searchParams.get('v');
+      const embedMatch = u.pathname.match(/^\/(embed|shorts)\/([^/]+)/);
+      if (embedMatch) return embedMatch[2];
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
 
 export function newId(): string {
   return crypto.randomUUID();
@@ -83,6 +111,7 @@ export function createBlock(type: BlockType): Block {
     case 'button_row': return { id, type, buttons: [{ label: 'Button', href: '', style: 'primary' }] };
     case 'profile_card': return { id, type, avatarInitials: 'AB', name: 'Name', role: 'Role', bio: [{ text: 'Bio.' }] };
     case 'image': return { id, type, src: '', alt: '' };
+    case 'embed': return { id, type, url: '' };
     case 'divider': return { id, type };
   }
 }
