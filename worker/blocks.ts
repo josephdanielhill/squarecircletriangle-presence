@@ -15,6 +15,7 @@ export const BLOCK_TYPES = [
   'button_row',
   'profile_card',
   'image',
+  'embed',
   'divider',
 ] as const;
 
@@ -148,6 +149,9 @@ function validateBlockFields(type: BlockType, b: Record<string, unknown>, i: num
       return null;
     case 'image':
       if (typeof b.src !== 'string' || typeof b.alt !== 'string') return `block ${i} (image) needs src and alt`;
+      return null;
+    case 'embed':
+      if (typeof b.url !== 'string' || !b.url) return `block ${i} (embed) needs a url`;
       return null;
     case 'divider':
       return null;

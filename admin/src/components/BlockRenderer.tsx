@@ -4,7 +4,9 @@ import * as React from 'react';
 import type {
   Block, RichText, CardGridBlock as CardGridBlockT, ChangelogTableBlock as ChangelogTableBlockT,
   TableBlock as TableBlockT, ButtonRowBlock as ButtonRowBlockT, ProfileCardBlock as ProfileCardBlockT,
+  EmbedBlock as EmbedBlockT,
 } from '../lib/blocks';
+import { youTubeIdFromUrl } from '../lib/blocks';
 
 const GLYPHS: Record<string, JSX.Element> = {
   square: (
@@ -135,6 +137,26 @@ function ProfileCardView({ block }: { block: ProfileCardBlockT }) {
   );
 }
 
+function EmbedView({ block }: { block: EmbedBlockT }) {
+  const videoId = youTubeIdFromUrl(block.url);
+  if (!videoId) {
+    return <div className="embed-error">Couldn't recognize a YouTube URL: {block.url || '(empty)'}</div>;
+  }
+  return (
+    <figure className="video-embed">
+      <div className="video-embed-frame">
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+          title={block.caption || 'YouTube video'}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        />
+      </div>
+      {block.caption && <figcaption>{block.caption}</figcaption>}
+    </figure>
+  );
+}
+
 function BlockView({ block }: { block: Block }) {
   switch (block.type) {
     case 'heading': {
@@ -177,6 +199,7 @@ function BlockView({ block }: { block: Block }) {
           {block.caption && <figcaption>{block.caption}</figcaption>}
         </figure>
       );
+    case 'embed': return <EmbedView block={block} />;
     case 'divider': return <hr className="divider" />;
     default: return null;
   }
