@@ -304,6 +304,12 @@ function PageView({ page }) {
         )}
       </nav>
 
+      {page.id === 'welcome' && (
+        <div className="homepage-hero">
+          <img src="welcome-hero.jpg" alt="Sunrise over mountains" fetchpriority="high" />
+        </div>
+      )}
+
       {page.eyebrow && <div className="page-eyebrow">{page.eyebrow}</div>}
       <h1 className="page-title">{page.title}</h1>
       {page.lede && (
