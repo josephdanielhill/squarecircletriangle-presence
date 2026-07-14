@@ -1,5 +1,14 @@
 name = "squarecircletriangle-presence"
 compatibility_date = "2024-09-23"
+main = "worker/index.ts"
 
 [assets]
 directory = "./public"
+binding = "ASSETS"
+
+# Secrets (set with `wrangler secret put <NAME>`, or in a local, gitignored
+# `.dev.vars` file for `wrangler dev`):
+#   NEON_DATABASE_URL       - Neon Postgres connection string (HTTP driver)
+#   NEON_AUTH_JWKS_URL      - Neon Auth project's JWKS endpoint
+#   NEON_AUTH_ISSUER        - Neon Auth token issuer, for JWT `iss` validation
+#   ADMIN_EMAIL             - the single admin account's email (inbx@josephhill.co)

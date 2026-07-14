@@ -98,6 +98,15 @@
   </script>
 
   <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="glyphs.jsx"></script>
+  <script type="text/babel" src="block-renderer.jsx"></script>
+  <!--
+    docs-content.jsx is no longer used by docs.jsx (pages are fetched from
+    /api/pages instead) and is kept loaded only as a harmless no-op until the
+    CMS migration has been applied to the live database and verified end to
+    end -- see plan step 6 / db/schema.sql / scripts/migrate-content.mjs.
+    Once verified, remove this tag and delete public/docs-content.jsx.
+  -->
   <script type="text/babel" src="docs-content.jsx"></script>
   <script type="text/babel" src="docs.jsx"></script>
   <script type="text/babel">

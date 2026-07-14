@@ -1,0 +1,7 @@
+# Copy to .dev.vars (gitignored) and fill in for local `wrangler dev`.
+# In production set these with: wrangler secret put <NAME>
+
+NEON_DATABASE_URL=postgresql://user:password@ep-example.neon.tech/neondb?sslmode=require
+NEON_AUTH_JWKS_URL=https://api.stack-auth.com/api/v1/projects/<project-id>/.well-known/jwks.json
+NEON_AUTH_ISSUER=https://api.stack-auth.com/api/v1/projects/<project-id>
+ADMIN_EMAIL=inbx@josephhill.co
