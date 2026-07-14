@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { guestApi } from './lib/api';
 import { BlockEditor } from './components/BlockEditor';
+import { BlockRenderer } from './components/BlockRenderer';
 import type { Block } from './lib/blocks';
 
 // Deliberately does not import AdminApp, any admin/* route, or lib/auth.ts
@@ -20,6 +21,7 @@ export function GuestEditApp() {
   const [status, setStatus] = useState<'loading' | 'ready' | 'invalid' | 'submitted'>('loading');
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [showPreview, setShowPreview] = useState(true);
 
   useEffect(() => {
     if (!token) { setStatus('invalid'); setError('No edit link token provided.'); return; }
@@ -90,7 +92,27 @@ export function GuestEditApp() {
         You can keep editing and resubmit at any time before it's reviewed.
       </p>
       {error && <p className="error-text">{error}</p>}
-      <BlockEditor blocks={blocks} onChange={setBlocks} />
+      <div className={'editor-split' + (showPreview ? '' : ' no-preview')}>
+        <div className="editor-col">
+          <div className="preview-head">
+            <span>Content</span>
+            {!showPreview && <button className="btn-link" onClick={() => setShowPreview(true)}>Show preview</button>}
+          </div>
+          <BlockEditor blocks={blocks} onChange={setBlocks} />
+        </div>
+        {showPreview && (
+          <div className="preview-col">
+            <div className="preview-head">
+              <span>Preview</span>
+              <button className="btn-link" onClick={() => setShowPreview(false)}>Hide</button>
+            </div>
+            <div className="prose preview-prose">
+              <h1 className="page-title">{pageTitle}</h1>
+              <BlockRenderer blocks={blocks} />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
