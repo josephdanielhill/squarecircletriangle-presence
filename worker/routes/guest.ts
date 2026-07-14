@@ -44,6 +44,7 @@ guestRoutes.get('/:token', async (c) => {
 
   return c.json({
     page: { id: page.id, title: page.title, section: page.section, blocks: active ? active.blocks : page.blocks },
+    note: resolved.guestToken.note,
     hasPendingDraft: !!pending,
     hasInProgressDraft: !!inProgress,
   });

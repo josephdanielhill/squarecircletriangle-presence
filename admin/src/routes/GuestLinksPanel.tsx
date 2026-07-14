@@ -4,6 +4,7 @@ import { adminApi, type GuestTokenItem } from '../lib/api';
 export function GuestLinksPanel({ pageId }: { pageId: string }) {
   const [tokens, setTokens] = useState<GuestTokenItem[] | null>(null);
   const [label, setLabel] = useState('');
+  const [note, setNote] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [newLink, setNewLink] = useState<string | null>(null);
 
@@ -14,9 +15,10 @@ export function GuestLinksPanel({ pageId }: { pageId: string }) {
   const create = async () => {
     setError(null);
     try {
-      const result = await adminApi.createGuestToken(pageId, { label: label || undefined });
+      const result = await adminApi.createGuestToken(pageId, { label: label || undefined, note: note || undefined });
       setNewLink(new URL(result.editUrl!, window.location.origin).toString());
       setLabel('');
+      setNote('');
       refresh();
     } catch (e: any) {
       setError(e.message || 'Failed to create guest link');
@@ -36,9 +38,17 @@ export function GuestLinksPanel({ pageId }: { pageId: string }) {
         under Drafts before they go live.
       </p>
 
-      <div className="form-inline">
-        <input className="field-input" type="text" placeholder="Label (e.g. Sponsor: Acme Co)"
-               value={label} onChange={(e) => setLabel(e.target.value)} />
+      <div className="form-card" style={{ maxWidth: 480, marginBottom: 16 }}>
+        <label className="field">
+          <span className="field-label">Label (for you -- not shown to the guest)</span>
+          <input className="field-input" type="text" placeholder="e.g. Sponsor: Acme Co"
+                 value={label} onChange={(e) => setLabel(e.target.value)} />
+        </label>
+        <label className="field">
+          <span className="field-label">Note for the guest (optional)</span>
+          <textarea className="field-textarea" rows={3} placeholder="e.g. Hey, welcome! Feel free to add your logo and a short blurb about your project."
+                    value={note} onChange={(e) => setNote(e.target.value)} />
+        </label>
         <button className="btn-primary" onClick={create}>Generate guest link</button>
       </div>
 
@@ -53,18 +63,19 @@ export function GuestLinksPanel({ pageId }: { pageId: string }) {
       {error && <p className="error-text">{error}</p>}
 
       <table className="admin-table" style={{ marginTop: 16 }}>
-        <thead><tr><th>Label</th><th>Created</th><th>Last used</th><th>Status</th><th></th></tr></thead>
+        <thead><tr><th>Label</th><th>Note</th><th>Created</th><th>Last used</th><th>Status</th><th></th></tr></thead>
         <tbody>
           {(tokens || []).map((t) => (
             <tr key={t.id}>
               <td>{t.label || '—'}</td>
+              <td title={t.note || ''}>{t.note || '—'}</td>
               <td>{new Date(t.createdAt).toLocaleDateString()}</td>
               <td>{t.lastUsedAt ? new Date(t.lastUsedAt).toLocaleDateString() : 'Never'}</td>
               <td>{t.revokedAt ? 'Revoked' : t.expiresAt && new Date(t.expiresAt) < new Date() ? 'Expired' : 'Active'}</td>
               <td>{!t.revokedAt && <button className="btn-link" onClick={() => revoke(t.id)}>Revoke</button>}</td>
             </tr>
           ))}
-          {tokens && tokens.length === 0 && <tr><td colSpan={5} className="field-hint">No guest links yet.</td></tr>}
+          {tokens && tokens.length === 0 && <tr><td colSpan={6} className="field-hint">No guest links yet.</td></tr>}
         </tbody>
       </table>
     </div>

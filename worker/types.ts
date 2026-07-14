@@ -31,6 +31,7 @@ export interface GuestTokenRow {
   token: string;
   page_id: string;
   label: string | null;
+  note: string | null;
   created_at: string;
   created_by: string | null;
   expires_at: string | null;

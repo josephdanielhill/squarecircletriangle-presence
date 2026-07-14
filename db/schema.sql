@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS guest_tokens (
   id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   token         text UNIQUE NOT NULL,            -- opaque random, 32 bytes base64url
   page_id       text NOT NULL REFERENCES pages(id) ON DELETE CASCADE,
-  label         text,                            -- admin note, e.g. "Sponsor: Acme Co"
+  label         text,                            -- admin-only identifier, e.g. "Sponsor: Acme Co"
+  note          text,                            -- shown to the guest, e.g. a welcome message
   created_at    timestamptz NOT NULL DEFAULT now(),
   created_by    text,
   expires_at    timestamptz,
