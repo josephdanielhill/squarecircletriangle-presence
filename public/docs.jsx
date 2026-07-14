@@ -153,7 +153,18 @@ function Sidebar({ pages, currentId, open, onClose }) {
 
   const toggle = (sec) => setCollapsed(c => ({ ...c, [sec]: !c[sec] }));
 
-  const homePage = pages.find(p => p.section === 'Home') || pages[0];
+  // 'welcome' is the dedicated landing page (also hardcoded elsewhere, e.g.
+  // the topbar brand link and the homepage hero image) -- prefer it
+  // explicitly rather than just "first page tagged Home", so a newly
+  // created Home-section page can't accidentally displace it as the target
+  // of the sidebar's Home link.
+  const homePage = pages.find(p => p.id === 'welcome') || pages.find(p => p.section === 'Home') || pages[0];
+  // Other Home-section pages (e.g. new ones created via the admin) get
+  // listed under the Home link, same as Square/Circle/Triangle list theirs.
+  // 'privacy' is excluded since it already has its own permanent footer link.
+  const extraHomePages = homePage
+    ? pages.filter(p => p.section === 'Home' && p.id !== homePage.id && p.id !== 'privacy')
+    : [];
 
   return (
     <aside className={'sidebar' + (open ? ' is-open' : '')}
@@ -169,17 +180,29 @@ function Sidebar({ pages, currentId, open, onClose }) {
         if (sec.kind === 'home') {
           if (!homePage) return null;
           return (
-            <a key={sec.id}
-               href={'#/' + homePage.id}
-               className={'nav-home' + (currentId === homePage.id ? ' active' : '')}>
-              <span className="nav-home-icon" aria-hidden="true">
-                <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M2.5 7.5 8 2.5l5.5 5"/>
-                  <path d="M3.5 7v6.5h9V7"/>
-                </svg>
-              </span>
-              <span>Home</span>
-            </a>
+            <React.Fragment key={sec.id}>
+              <a href={'#/' + homePage.id}
+                 className={'nav-home' + (currentId === homePage.id ? ' active' : '')}>
+                <span className="nav-home-icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M2.5 7.5 8 2.5l5.5 5"/>
+                    <path d="M3.5 7v6.5h9V7"/>
+                  </svg>
+                </span>
+                <span>Home</span>
+              </a>
+              {extraHomePages.length > 0 && (
+                <div className="nav-children">
+                  {extraHomePages.map(p => (
+                    <a key={p.id}
+                       className={'nav-item' + (currentId === p.id ? ' active' : '')}
+                       href={'#/' + p.id}>
+                      {p.title}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </React.Fragment>
           );
         }
 
