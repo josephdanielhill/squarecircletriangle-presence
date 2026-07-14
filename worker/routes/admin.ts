@@ -145,7 +145,7 @@ adminRoutes.delete('/pages/:id', async (c) => {
 adminRoutes.get('/pages/:id/guest-tokens', async (c) => {
   const sql = getDb(c.env);
   const rows = await sql(
-    `SELECT id, label, created_at AS "createdAt", expires_at AS "expiresAt",
+    `SELECT id, label, note, created_at AS "createdAt", expires_at AS "expiresAt",
        revoked_at AS "revokedAt", last_used_at AS "lastUsedAt"
      FROM guest_tokens WHERE page_id = $1 ORDER BY created_at DESC`,
     [c.req.param('id')]
@@ -164,10 +164,10 @@ adminRoutes.post('/pages/:id/guest-tokens', async (c) => {
   const token = randomToken();
   const expiresAt = body.expiresAt ?? null;
   const rows = (await sql(
-    `INSERT INTO guest_tokens (token, page_id, label, created_by, expires_at)
-     VALUES ($1,$2,$3,$4,$5)
-     RETURNING id, token, label, created_at AS "createdAt", expires_at AS "expiresAt"`,
-    [token, pageId, body.label ?? null, c.get('adminSub') || null, expiresAt]
+    `INSERT INTO guest_tokens (token, page_id, label, note, created_by, expires_at)
+     VALUES ($1,$2,$3,$4,$5,$6)
+     RETURNING id, token, label, note, created_at AS "createdAt", expires_at AS "expiresAt"`,
+    [token, pageId, body.label ?? null, body.note ?? null, c.get('adminSub') || null, expiresAt]
   )) as GuestTokenRow[];
 
   const row = rows[0];

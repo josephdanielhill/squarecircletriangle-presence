@@ -56,6 +56,7 @@ export interface GuestTokenItem {
   id: string;
   token?: string;
   label: string | null;
+  note: string | null;
   createdAt: string;
   expiresAt: string | null;
   revokedAt?: string | null;
@@ -100,7 +101,7 @@ export const adminApi = {
   deletePage: (id: string) => adminFetch(`/pages/${encodeURIComponent(id)}`, { method: 'DELETE' }),
 
   listGuestTokens: (pageId: string): Promise<GuestTokenItem[]> => adminFetch(`/pages/${encodeURIComponent(pageId)}/guest-tokens`),
-  createGuestToken: (pageId: string, body: { label?: string; expiresAt?: string }): Promise<GuestTokenItem> =>
+  createGuestToken: (pageId: string, body: { label?: string; note?: string; expiresAt?: string }): Promise<GuestTokenItem> =>
     adminFetch(`/pages/${encodeURIComponent(pageId)}/guest-tokens`, { method: 'POST', body: JSON.stringify(body) }),
   revokeGuestToken: (tokenId: string) => adminFetch(`/guest-tokens/${encodeURIComponent(tokenId)}`, { method: 'DELETE' }),
 

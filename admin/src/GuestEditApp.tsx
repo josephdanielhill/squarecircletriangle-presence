@@ -17,6 +17,7 @@ function getTokenFromPath(): string {
 export function GuestEditApp() {
   const token = getTokenFromPath();
   const [pageTitle, setPageTitle] = useState<string | null>(null);
+  const [note, setNote] = useState<string | null>(null);
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [status, setStatus] = useState<'loading' | 'ready' | 'invalid' | 'submitted'>('loading');
   const [error, setError] = useState<string | null>(null);
@@ -35,6 +36,7 @@ export function GuestEditApp() {
     guestApi.get(token)
       .then((res) => {
         setPageTitle(res.page.title);
+        setNote(res.note || null);
         setBlocks(res.page.blocks || []);
         setStatus('ready');
       })
@@ -112,6 +114,12 @@ export function GuestEditApp() {
           </button>
         </div>
       </header>
+      {note && (
+        <div className="callout tip">
+          <span className="ico">→</span>
+          <span style={{ whiteSpace: 'pre-wrap' }}>{note}</span>
+        </div>
+      )}
       <p className="field-hint">
         "Save progress" keeps your edits private so you can pick up later -- only "Submit for review" sends them to be reviewed and published.
       </p>
