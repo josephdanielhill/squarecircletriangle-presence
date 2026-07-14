@@ -4,3 +4,13 @@ node_modules/
 .env
 *.log
 .DS_Store
+
+# CMS build/tooling
+.dev.vars
+.wrangler/
+admin/node_modules/
+admin/.env
+public/admin/
+public/edit/
+public/assets/
+scripts/migrated-pages.json

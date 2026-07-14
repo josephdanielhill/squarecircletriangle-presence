@@ -1,0 +1,25 @@
+{
+  "name": "squarecircletriangle-presence-worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "migrate": "node scripts/migrate-content.mjs"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.4",
+    "hono": "^4.6.14",
+    "jose": "^5.9.6"
+  },
+  "devDependencies": {
+    "@babel/parser": "^7.26.2",
+    "@babel/traverse": "^7.25.9",
+    "@babel/types": "^7.26.0",
+    "@cloudflare/workers-types": "^4.20241127.0",
+    "pg": "^8.13.1",
+    "typescript": "^5.7.2",
+    "wrangler": "^3.99.0"
+  }
+}

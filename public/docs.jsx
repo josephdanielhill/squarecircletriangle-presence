@@ -1,8 +1,10 @@
 /* eslint-disable */
 // docs.jsx: app shell: topbar + sidebar + main + TOC + hash routing + search
+// Page content is fetched from the Worker API (/api/pages, /api/pages/:id)
+// instead of a hardcoded array, so published CMS edits show up here directly.
 
-const PAGES = window.SCT_PAGES;
 const G = window.SCT_GLYPHS;
+const BlockRenderer = window.SCT_BlockRenderer;
 
 const SECTIONS = [
   { id: 'Home',     kind: 'home' },
@@ -25,15 +27,58 @@ function useHashRoute() {
   return route;
 }
 
-function findPage(id) {
-  return PAGES.find(p => p.id === id) || PAGES[0];
+// Metadata for every published page (no block content) -- powers the
+// sidebar, search, and prev/next nav without a full fetch per page.
+function usePageList() {
+  const [pages, setPages] = React.useState(null);
+  const [error, setError] = React.useState(null);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    fetch('/api/pages')
+      .then((r) => {
+        if (!r.ok) throw new Error('Failed to load pages (' + r.status + ')');
+        return r.json();
+      })
+      .then((data) => { if (!cancelled) setPages(data); })
+      .catch((e) => { if (!cancelled) setError(e.message || 'Failed to load pages'); });
+    return () => { cancelled = true; };
+  }, []);
+
+  return { pages, error };
 }
 
-const PAGE_ORDER = PAGES.map(p => p.id);
+// Full content (incl. blocks) for the currently routed page.
+function usePageDetail(id) {
+  const [page, setPage] = React.useState(null);
+  const [status, setStatus] = React.useState('loading'); // 'loading' | 'ready' | 'notfound' | 'error'
 
-function pagesBySection() {
+  React.useEffect(() => {
+    if (!id) return;
+    let cancelled = false;
+    setStatus('loading');
+    setPage(null);
+    fetch('/api/pages/' + encodeURIComponent(id))
+      .then((r) => {
+        if (r.status === 404) { if (!cancelled) setStatus('notfound'); return null; }
+        if (!r.ok) throw new Error('Failed to load page (' + r.status + ')');
+        return r.json();
+      })
+      .then((data) => {
+        if (cancelled || !data) return;
+        setPage(data);
+        setStatus('ready');
+      })
+      .catch(() => { if (!cancelled) setStatus('error'); });
+    return () => { cancelled = true; };
+  }, [id]);
+
+  return { page, status };
+}
+
+function pagesBySection(pages) {
   const out = {};
-  PAGES.forEach(p => {
+  pages.forEach(p => {
     out[p.section] = out[p.section] || [];
     out[p.section].push(p);
   });
@@ -50,7 +95,7 @@ function BrandMark() {
   );
 }
 
-function Topbar({ page, onSearch, theme, onToggleTheme, onMenuOpen }) {
+function Topbar({ onSearch, theme, onToggleTheme, onMenuOpen }) {
   return (
     <header className="topbar">
       <button className="menu-btn" onClick={onMenuOpen} aria-label="Open navigation">
@@ -86,8 +131,8 @@ function Topbar({ page, onSearch, theme, onToggleTheme, onMenuOpen }) {
   );
 }
 
-function Sidebar({ currentId, open, onClose }) {
-  const bySection = pagesBySection();
+function Sidebar({ pages, currentId, open, onClose }) {
+  const bySection = pagesBySection(pages);
 
   const [collapsed, setCollapsed] = React.useState(() => {
     const init = {};
@@ -108,7 +153,7 @@ function Sidebar({ currentId, open, onClose }) {
 
   const toggle = (sec) => setCollapsed(c => ({ ...c, [sec]: !c[sec] }));
 
-  const homePage = PAGES.find(p => p.section === 'Home') || PAGES[0];
+  const homePage = pages.find(p => p.section === 'Home') || pages[0];
 
   return (
     <aside className={'sidebar' + (open ? ' is-open' : '')}
@@ -122,6 +167,7 @@ function Sidebar({ currentId, open, onClose }) {
       </button>
       {SECTIONS.map(sec => {
         if (sec.kind === 'home') {
+          if (!homePage) return null;
           return (
             <a key={sec.id}
                href={'#/' + homePage.id}
@@ -137,14 +183,14 @@ function Sidebar({ currentId, open, onClose }) {
           );
         }
 
-        const pages = bySection[sec.id] || [];
+        const pagesForSection = bySection[sec.id] || [];
         const isShape = sec.kind === 'shape';
         const isCollapsed = !!collapsed[sec.id];
-        const sectionActive = pages.some(p => p.id === currentId);
+        const sectionActive = pagesForSection.some(p => p.id === currentId);
 
         if (isShape) {
-          const topPage = pages.find(p => p.sectionTop);
-          const restPages = pages.filter(p => !p.sectionTop);
+          const topPage = pagesForSection.find(p => p.sectionTop);
+          const restPages = pagesForSection.filter(p => !p.sectionTop);
           const ordered = topPage ? [topPage, ...restPages] : restPages;
 
           return (
@@ -181,7 +227,7 @@ function Sidebar({ currentId, open, onClose }) {
               </svg>
             </button>
             <div className="nav-children">
-              {pages.map(p => (
+              {pagesForSection.map(p => (
                 <a key={p.id}
                    className={'nav-item' + (currentId === p.id ? ' active' : '')}
                    href={'#/' + p.id}>
@@ -240,6 +286,8 @@ function Toc({ pageId }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, [items]);
 
+  if (!items.length) return null;
+
   return (
     <aside className="toc">
       <div className="toc-title">On this page</div>
@@ -273,10 +321,35 @@ function Toc({ pageId }) {
   );
 }
 
-function PageView({ page }) {
-  const idx = PAGE_ORDER.indexOf(page.id);
-  const prev = idx > 0 ? findPage(PAGE_ORDER[idx - 1]) : null;
-  const next = idx < PAGE_ORDER.length - 1 ? findPage(PAGE_ORDER[idx + 1]) : null;
+function PageSkeleton() {
+  return (
+    <div className="page">
+      <div className="page-skeleton" aria-hidden="true">
+        <div className="sk-line sk-eyebrow"></div>
+        <div className="sk-line sk-title"></div>
+        <div className="sk-line sk-lede"></div>
+        <div className="sk-line"></div>
+        <div className="sk-line"></div>
+        <div className="sk-line" style={{ width: '70%' }}></div>
+      </div>
+    </div>
+  );
+}
+
+function PageNotFound({ id }) {
+  return (
+    <div className="page">
+      <h1 className="page-title">Page not found</h1>
+      <p className="page-lede">There's no page at "{id}". It may have been unpublished, moved, or never existed.</p>
+      <a className="inline" href="#/welcome">← Back to Welcome</a>
+    </div>
+  );
+}
+
+function PageView({ page, pageList }) {
+  const idx = pageList.findIndex(p => p.id === page.id);
+  const prev = idx > 0 ? pageList[idx - 1] : null;
+  const next = idx >= 0 && idx < pageList.length - 1 ? pageList[idx + 1] : null;
 
   React.useEffect(() => { window.scrollTo({ top: 0 }); }, [page.id]);
 
@@ -318,14 +391,14 @@ function PageView({ page }) {
           : <p className="page-lede">{page.lede}</p>
       )}
 
-      {page.updated && (
+      {page.updatedLabel && (
         <div className="page-meta">
-          <span className="avatar">{(page.updated || '').match(/by (\w)/)?.[1] || 'S'}</span>
-          <span>Last updated {page.updated}</span>
+          <span className="avatar">{(page.updatedLabel || '').match(/by (\w)/)?.[1] || 'S'}</span>
+          <span>Last updated {page.updatedLabel}</span>
         </div>
       )}
 
-      <div className="prose">{page.body()}</div>
+      <div className="prose"><BlockRenderer blocks={page.blocks} /></div>
 
       {(prev || next) && (
         <div className="page-nav">
@@ -351,7 +424,7 @@ function PageView({ page }) {
   );
 }
 
-function SearchOverlay({ open, onClose }) {
+function SearchOverlay({ open, onClose, pages }) {
   const [q, setQ] = React.useState('');
   const [hi, setHi] = React.useState(0);
   const inputRef = React.useRef(null);
@@ -361,14 +434,14 @@ function SearchOverlay({ open, onClose }) {
   }, [open]);
 
   const results = React.useMemo(() => {
-    if (!q) return PAGES.slice(0, 6);
+    if (!q) return pages.slice(0, 6);
     const needle = q.toLowerCase();
-    return PAGES.filter(p =>
+    return pages.filter(p =>
       p.title.toLowerCase().includes(needle) ||
-      p.lede.toLowerCase().includes(needle) ||
+      (p.lede || '').toLowerCase().includes(needle) ||
       p.section.toLowerCase().includes(needle)
     ).slice(0, 12);
-  }, [q]);
+  }, [q, pages]);
 
   const go = (id) => {
     window.location.hash = '#/' + id;
@@ -422,7 +495,7 @@ function SearchOverlay({ open, onClose }) {
 
 window.SCT_App = function App() {
   const route = useHashRoute();
-  const page = findPage(route);
+  const { pages, error: pagesError } = usePageList();
   const [searchOpen, setSearchOpen] = React.useState(false);
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   React.useEffect(() => { setSidebarOpen(false); }, [route]);
@@ -448,19 +521,35 @@ window.SCT_App = function App() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  const knownId = pages ? (pages.some(p => p.id === route) ? route : null) : undefined; // undefined while loading
+  const { page, status } = usePageDetail(knownId || undefined);
+
+  let main;
+  if (pagesError) {
+    main = <div className="page"><h1 className="page-title">Something went wrong</h1><p className="page-lede">{pagesError}</p></div>;
+  } else if (!pages) {
+    main = <PageSkeleton />;
+  } else if (knownId === null) {
+    main = <PageNotFound id={route} />;
+  } else if (status !== 'ready' || !page) {
+    main = <PageSkeleton />;
+  } else {
+    main = <PageView page={page} pageList={pages} />;
+  }
+
   return (
     <>
-      <Topbar page={page} onSearch={() => setSearchOpen(true)}
+      <Topbar onSearch={() => setSearchOpen(true)}
               theme={theme} onToggleTheme={toggleTheme}
               onMenuOpen={() => setSidebarOpen(true)} />
       {sidebarOpen && <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />}
       <div className="layout">
-        <Sidebar currentId={page.id} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <Sidebar pages={pages || []} currentId={route} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <main className="main">
-          <PageView page={page} />
+          {main}
         </main>
       </div>
-      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} pages={pages || []} />
 
       <TweaksPanel title="Tweaks">
         <TweakSection label="Theme">
