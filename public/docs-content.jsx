@@ -283,6 +283,8 @@ const PAGES = [
           build bespoke applications that transform sectors and build new ones. Our applications
           bridge education and community insights into practical, powerful tools.
         </p>
+
+        <h3 id="active-projects">Active Projects</h3>
         <div className="card-grid">
           <a className="card" href="#/triangle-deckcrm">
             <div className="card-icon">
@@ -304,20 +306,6 @@ const PAGES = [
             </div>
             <h4>Timecard</h4>
             <p>Time and project tracking for small teams that actually gets used.</p>
-            <span className="arrow">Learn more →</span>
-          </a>
-          <a className="card" href="#/triangle-kostly">
-            <div className="card-icon">
-              <svg viewBox="0 0 16 16">
-                <polygon className="fill" points="8,1.4 14.6,14.4 1.4,14.4" />
-                <polygon className="stroke" points="8,1.4 14.6,14.4 1.4,14.4" />
-              </svg>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-              <h4 style={{ margin: 0 }}>Kostly</h4>
-              <span style={{ fontSize: '10.5px', fontFamily: 'var(--ff-mono)', color: 'var(--muted)', background: 'var(--rule)', padding: '1px 6px', borderRadius: '4px' }}>SUNSET</span>
-            </div>
-            <p>Track software tooling, project cost distribution, and share your stack publicly.</p>
             <span className="arrow">Learn more →</span>
           </a>
           <a className="card" href="#/triangle-weeklie">
@@ -354,6 +342,25 @@ const PAGES = [
             <span className="arrow">Learn more →</span>
           </a>
         </div>
+
+        <h3 id="sunset-projects">Sunset Projects</h3>
+        <div className="card-grid">
+          <a className="card" href="#/triangle-kostly">
+            <div className="card-icon">
+              <svg viewBox="0 0 16 16">
+                <polygon className="fill" points="8,1.4 14.6,14.4 1.4,14.4" />
+                <polygon className="stroke" points="8,1.4 14.6,14.4 1.4,14.4" />
+              </svg>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+              <h4 style={{ margin: 0 }}>Kostly</h4>
+              <span style={{ fontSize: '10.5px', fontFamily: 'var(--ff-mono)', color: 'var(--muted)', background: 'var(--rule)', padding: '1px 6px', borderRadius: '4px' }}>SUNSET</span>
+            </div>
+            <p>Track software tooling, project cost distribution, and share your stack publicly.</p>
+            <span className="arrow">Learn more →</span>
+          </a>
+        </div>
+
         <p>
           Triangle applications are not built in isolation. They emerge from the patterns
           and problems surfaced in Square programs and Circle communities. This means they
