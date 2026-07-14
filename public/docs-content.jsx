@@ -993,7 +993,7 @@ const PAGES = [
         <div className="callout warn">
           <span className="ico">!</span>
           <span>
-            <strong>Project Sunset:</strong> Kostly has been sunset. The hosted application is no longer active, but this case study and the documentation below are preserved for historical reference.
+            <strong>Project Status:</strong> Sunset. Deployed in March 2026 with full project-tool cost distribution graphs, renewal email alerts, and a global Stack Index, this micro-app has now been retired. The hosted application is no longer active, but this case study and the documentation below are preserved for historical reference.
           </span>
         </div>
 
@@ -1090,13 +1090,6 @@ const PAGES = [
             <span>Feedback / Support</span>
             <span style={{ fontSize: '12px' }}>↗</span>
           </a>
-        </div>
-
-        <div className="callout warn">
-          <span className="ico">!</span>
-          <span>
-            <strong>Project Status:</strong> Sunset. Deployed in March 2026 with full project-tool cost distribution graphs, renewal email alerts, and a global Stack Index. This micro-app has now been retired.
-          </span>
         </div>
 
         <h2 id="objective">Objective &amp; Concept</h2>
