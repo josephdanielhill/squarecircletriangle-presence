@@ -132,4 +132,18 @@ export const guestApi = {
     }
     return res.json();
   },
+  // Saves a private, unsubmitted snapshot -- does not enter the admin's
+  // review queue (that only ever shows submitted drafts).
+  saveProgress: async (token: string, blocks: Block[]) => {
+    const res = await fetch(`/api/guest/${encodeURIComponent(token)}/save`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ blocks }),
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new ApiError(body.error || `Request failed (${res.status})`, res.status);
+    }
+    return res.json();
+  },
 };

@@ -44,7 +44,7 @@ export interface PageDraftRow {
   blocks: unknown[];
   guest_token_id: string | null;
   submitted_by: string | null;
-  status: 'pending' | 'approved' | 'rejected';
+  status: 'in_progress' | 'pending' | 'approved' | 'rejected';
   submitted_at: string;
   reviewed_at: string | null;
   reviewed_by: string | null;

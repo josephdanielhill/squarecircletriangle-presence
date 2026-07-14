@@ -48,7 +48,10 @@ CREATE TABLE IF NOT EXISTS page_drafts (
   blocks          jsonb NOT NULL,                -- proposed full block array
   guest_token_id  uuid REFERENCES guest_tokens(id),
   submitted_by    text,                          -- guest_tokens.label or 'guest'
-  status          text NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
+  -- 'in_progress': a private, unsubmitted save -- never shown in the admin
+  -- drafts queue (that only lists 'pending'). Lets a guest save their
+  -- work without it entering review until they explicitly submit.
+  status          text NOT NULL DEFAULT 'pending' CHECK (status IN ('in_progress','pending','approved','rejected')),
   submitted_at    timestamptz NOT NULL DEFAULT now(),
   reviewed_at     timestamptz,
   reviewed_by     text,
@@ -57,3 +60,6 @@ CREATE TABLE IF NOT EXISTS page_drafts (
 -- at most one pending draft per page (a second guest submission upserts the pending row)
 CREATE UNIQUE INDEX IF NOT EXISTS page_drafts_one_pending_per_page
   ON page_drafts(page_id) WHERE status = 'pending';
+-- at most one in-progress (unsubmitted) save per page, same idea
+CREATE UNIQUE INDEX IF NOT EXISTS page_drafts_one_in_progress_per_page
+  ON page_drafts(page_id) WHERE status = 'in_progress';

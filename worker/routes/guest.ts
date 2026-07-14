@@ -27,18 +27,54 @@ guestRoutes.get('/:token', async (c) => {
   if (pages.length === 0) return c.json({ error: 'Page no longer exists' }, 404);
   const page = pages[0];
 
-  const drafts = await sql(
-    `SELECT blocks FROM page_drafts WHERE page_id = $1 AND status = 'pending'`,
+  // A private 'in_progress' save (not yet submitted) takes priority over an
+  // already-submitted 'pending' draft, since it reflects the guest's more
+  // recent work -- submitting clears any in_progress row (see below), so
+  // these two only ever coexist when the guest saved again after
+  // submitting without re-submitting.
+  const drafts = (await sql(
+    `SELECT blocks, status FROM page_drafts WHERE page_id = $1 AND status IN ('in_progress', 'pending')`,
     [page.id]
-  );
-  const blocks = drafts.length > 0 ? (drafts[0] as { blocks: unknown }).blocks : page.blocks;
+  )) as { blocks: unknown; status: string }[];
+  const inProgress = drafts.find((d) => d.status === 'in_progress');
+  const pending = drafts.find((d) => d.status === 'pending');
+  const active = inProgress ?? pending;
 
   await sql(`UPDATE guest_tokens SET last_used_at = now() WHERE id = $1`, [resolved.guestToken.id]);
 
   return c.json({
-    page: { id: page.id, title: page.title, section: page.section, blocks },
-    hasPendingDraft: drafts.length > 0,
+    page: { id: page.id, title: page.title, section: page.section, blocks: active ? active.blocks : page.blocks },
+    hasPendingDraft: !!pending,
+    hasInProgressDraft: !!inProgress,
   });
+});
+
+guestRoutes.post('/:token/save', async (c) => {
+  const sql = getDb(c.env);
+  const resolved = await resolveToken(sql, c.req.param('token'));
+  if ('error' in resolved) return c.json({ error: resolved.error }, resolved.status);
+
+  const body = await c.req.json().catch(() => null);
+  if (!body) return c.json({ error: 'Invalid JSON body' }, 400);
+
+  const result = validateBlocks(body.blocks);
+  if (!result.ok) return c.json({ error: result.error }, 400);
+
+  await sql(
+    `INSERT INTO page_drafts (page_id, blocks, guest_token_id, submitted_by, status, submitted_at)
+     VALUES ($1, $2::jsonb, $3, $4, 'in_progress', now())
+     ON CONFLICT (page_id) WHERE status = 'in_progress'
+     DO UPDATE SET blocks = EXCLUDED.blocks, submitted_at = now()`,
+    [
+      resolved.guestToken.page_id,
+      JSON.stringify(result.blocks),
+      resolved.guestToken.id,
+      resolved.guestToken.label ?? 'guest',
+    ]
+  );
+  await sql(`UPDATE guest_tokens SET last_used_at = now() WHERE id = $1`, [resolved.guestToken.id]);
+
+  return c.json({ ok: true, status: 'in_progress' });
 });
 
 guestRoutes.post('/:token/draft', async (c) => {
@@ -64,6 +100,10 @@ guestRoutes.post('/:token/draft', async (c) => {
       resolved.guestToken.label ?? 'guest',
     ]
   );
+  // The in-progress save (if any) is now superseded by this submission.
+  await sql(`DELETE FROM page_drafts WHERE page_id = $1 AND status = 'in_progress'`, [
+    resolved.guestToken.page_id,
+  ]);
   await sql(`UPDATE guest_tokens SET last_used_at = now() WHERE id = $1`, [resolved.guestToken.id]);
 
   return c.json({ ok: true, status: 'pending' });
