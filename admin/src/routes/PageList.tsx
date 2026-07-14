@@ -31,6 +31,12 @@ export function PageList() {
         <div key={group.section} className="page-list-section">
           <h2>{group.section}</h2>
           <table className="admin-table">
+            <colgroup>
+              <col />
+              <col className="col-status" />
+              <col className="col-updated" />
+              <col className="col-action" />
+            </colgroup>
             <thead><tr><th>Title</th><th>Status</th><th>Updated</th><th></th></tr></thead>
             <tbody>
               {group.items.map((p) => (
