@@ -493,7 +493,7 @@ function PageView({ page, pageList }) {
         </div>
       )}
 
-      <div className="prose"><BlockRenderer blocks={page.blocks} /></div>
+      <div className="prose"><BlockRenderer blocks={page.blocks} pages={pageList} pageId={page.id} /></div>
 
       {(prev || next) && (
         <div className="page-nav">

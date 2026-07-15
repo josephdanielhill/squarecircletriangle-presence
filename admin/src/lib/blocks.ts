@@ -14,6 +14,7 @@ export const BLOCK_TYPES = [
   'image',
   'embed',
   'divider',
+  'child_display',
 ] as const;
 
 export type BlockType = (typeof BLOCK_TYPES)[number];
@@ -32,6 +33,7 @@ export const BLOCK_TYPE_LABELS: Record<BlockType, string> = {
   image: 'Image',
   embed: 'Embed (YouTube)',
   divider: 'Divider',
+  child_display: 'Child pages',
 };
 
 export interface RichSpan {
@@ -58,11 +60,12 @@ export interface ProfileCardBlock { id: string; type: 'profile_card'; avatarInit
 export interface ImageBlock { id: string; type: 'image'; src: string; alt: string; caption?: string }
 export interface EmbedBlock { id: string; type: 'embed'; url: string; caption?: string }
 export interface DividerBlock { id: string; type: 'divider' }
+export interface ChildDisplayBlock { id: string; type: 'child_display'; limit: number }
 
 export type Block =
   | HeadingBlock | ParagraphBlock | ListBlock | CardGridBlock | CalloutBlock
   | DefinitionListBlock | ChangelogTableBlock | TableBlock | ButtonRowBlock
-  | ProfileCardBlock | ImageBlock | EmbedBlock | DividerBlock;
+  | ProfileCardBlock | ImageBlock | EmbedBlock | DividerBlock | ChildDisplayBlock;
 
 /**
  * Extracts a YouTube video ID from any of the common URL shapes people
@@ -113,6 +116,7 @@ export function createBlock(type: BlockType): Block {
     case 'image': return { id, type, src: '', alt: '' };
     case 'embed': return { id, type, url: '' };
     case 'divider': return { id, type };
+    case 'child_display': return { id, type, limit: 5 };
   }
 }
 

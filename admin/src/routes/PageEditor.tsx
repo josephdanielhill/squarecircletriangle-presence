@@ -88,7 +88,7 @@ export function PageEditor({ pageId }: { pageId: string }) {
               </div>
               <div className="prose preview-prose">
                 <h1 className="page-title">{page.title}</h1>
-                <BlockRenderer blocks={blocks} />
+                <BlockRenderer blocks={blocks} pages={pages} pageId={pageId} />
               </div>
             </div>
           )}
