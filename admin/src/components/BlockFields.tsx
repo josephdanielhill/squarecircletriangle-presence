@@ -247,6 +247,25 @@ export function BlockFields({ block, onChange }: { block: Block; onChange: (b: B
     case 'divider':
       return <p className="field-hint">A horizontal divider line. No fields.</p>;
 
+    case 'child_display':
+      return (
+        <div className="fields-grid">
+          <label className="field">
+            <span className="field-label">Number of child pages to show</span>
+            <input
+              className="field-input"
+              type="number"
+              min={1}
+              value={block.limit}
+              onChange={(e) => onChange({ ...block, limit: Math.max(1, parseInt(e.target.value, 10) || 1) })}
+            />
+          </label>
+          <p className="field-hint">
+            Lists the pages nested directly under this one. If more pages exist than the limit, a "Show more" button reveals the rest.
+          </p>
+        </div>
+      );
+
     default:
       return null;
   }

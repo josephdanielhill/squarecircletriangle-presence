@@ -17,6 +17,7 @@ export const BLOCK_TYPES = [
   'image',
   'embed',
   'divider',
+  'child_display',
 ] as const;
 
 export type BlockType = (typeof BLOCK_TYPES)[number];
@@ -154,6 +155,11 @@ function validateBlockFields(type: BlockType, b: Record<string, unknown>, i: num
       if (typeof b.url !== 'string' || !b.url) return `block ${i} (embed) needs a url`;
       return null;
     case 'divider':
+      return null;
+    case 'child_display':
+      if (typeof b.limit !== 'number' || !Number.isInteger(b.limit) || b.limit < 1) {
+        return `block ${i} (child_display) needs a positive integer limit`;
+      }
       return null;
     default:
       return `block ${i} has unhandled type`;

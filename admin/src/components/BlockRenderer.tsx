@@ -4,9 +4,10 @@ import * as React from 'react';
 import type {
   Block, RichText, CardGridBlock as CardGridBlockT, ChangelogTableBlock as ChangelogTableBlockT,
   TableBlock as TableBlockT, ButtonRowBlock as ButtonRowBlockT, ProfileCardBlock as ProfileCardBlockT,
-  EmbedBlock as EmbedBlockT,
+  EmbedBlock as EmbedBlockT, ChildDisplayBlock as ChildDisplayBlockT,
 } from '../lib/blocks';
 import { youTubeIdFromUrl } from '../lib/blocks';
+import type { PageListItem } from '../lib/api';
 
 const GLYPHS: Record<string, JSX.Element> = {
   square: (
@@ -157,7 +158,38 @@ function EmbedView({ block }: { block: EmbedBlockT }) {
   );
 }
 
-function BlockView({ block }: { block: Block }) {
+function ChildDisplayView({ block, pages, pageId }: { block: ChildDisplayBlockT; pages?: PageListItem[]; pageId?: string }) {
+  const [expanded, setExpanded] = React.useState(false);
+  if (!pages) {
+    return <p className="field-hint">Child pages preview isn't available in this editor.</p>;
+  }
+  const children = pages
+    .filter((p) => p.parentId === pageId)
+    .sort((a, b) => a.sortOrder - b.sortOrder || a.title.localeCompare(b.title));
+  if (children.length === 0) {
+    return <p className="field-hint">No child pages yet.</p>;
+  }
+  const shown = expanded ? children : children.slice(0, block.limit);
+  const remaining = children.length - shown.length;
+  return (
+    <div className="child-display">
+      <ul className="child-display-list">
+        {shown.map((p) => (
+          <li key={p.id} className="child-display-item">
+            <a className="child-display-link" href={'#/' + p.id}>{p.sectionTop ? 'Overview' : p.title}</a>
+          </li>
+        ))}
+      </ul>
+      {remaining > 0 && (
+        <button type="button" className="btn-secondary child-display-more" onClick={() => setExpanded(true)}>
+          Show {remaining} more
+        </button>
+      )}
+    </div>
+  );
+}
+
+function BlockView({ block, pages, pageId }: { block: Block; pages?: PageListItem[]; pageId?: string }) {
   switch (block.type) {
     case 'heading': {
       const Tag = block.level === 3 ? 'h3' : 'h2';
@@ -201,11 +233,12 @@ function BlockView({ block }: { block: Block }) {
       );
     case 'embed': return <EmbedView block={block} />;
     case 'divider': return <hr className="divider" />;
+    case 'child_display': return <ChildDisplayView block={block} pages={pages} pageId={pageId} />;
     default: return null;
   }
 }
 
-export function BlockRenderer({ blocks }: { blocks: Block[] }) {
+export function BlockRenderer({ blocks, pages, pageId }: { blocks: Block[]; pages?: PageListItem[]; pageId?: string }) {
   if (!blocks || blocks.length === 0) return null;
-  return <>{blocks.map((block) => <BlockView key={block.id} block={block} />)}</>;
+  return <>{blocks.map((block) => <BlockView key={block.id} block={block} pages={pages} pageId={pageId} />)}</>;
 }

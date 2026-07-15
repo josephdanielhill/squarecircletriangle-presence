@@ -184,7 +184,34 @@ function EmbedBlock({ block }) {
   );
 }
 
-function BlockView({ block }) {
+function ChildDisplayBlock({ block, pages, pageId }) {
+  const [expanded, setExpanded] = React.useState(false);
+  if (!pages) return null;
+  const children = pages
+    .filter((p) => p.parentId === pageId)
+    .sort((a, b) => a.sortOrder - b.sortOrder || a.title.localeCompare(b.title));
+  if (children.length === 0) return null;
+  const shown = expanded ? children : children.slice(0, block.limit);
+  const remaining = children.length - shown.length;
+  return (
+    <div className="child-display">
+      <ul className="child-display-list">
+        {shown.map((p) => (
+          <li key={p.id} className="child-display-item">
+            <a className="child-display-link" href={'#/' + p.id}>{p.sectionTop ? 'Overview' : p.title}</a>
+          </li>
+        ))}
+      </ul>
+      {remaining > 0 && (
+        <button type="button" className="btn-secondary child-display-more" onClick={() => setExpanded(true)}>
+          Show {remaining} more
+        </button>
+      )}
+    </div>
+  );
+}
+
+function BlockView({ block, pages, pageId }) {
   switch (block.type) {
     case 'heading': {
       const Tag = block.level === 3 ? 'h3' : 'h2';
@@ -239,16 +266,18 @@ function BlockView({ block }) {
       return <EmbedBlock block={block} />;
     case 'divider':
       return <hr className="divider" />;
+    case 'child_display':
+      return <ChildDisplayBlock block={block} pages={pages} pageId={pageId} />;
     default:
       return null;
   }
 }
 
-window.SCT_BlockRenderer = function BlockRenderer({ blocks }) {
+window.SCT_BlockRenderer = function BlockRenderer({ blocks, pages, pageId }) {
   if (!blocks || blocks.length === 0) return null;
   return (
     <>
-      {blocks.map((block) => <BlockView key={block.id} block={block} />)}
+      {blocks.map((block) => <BlockView key={block.id} block={block} pages={pages} pageId={pageId} />)}
     </>
   );
 };
