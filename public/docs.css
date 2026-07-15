@@ -270,6 +270,24 @@ button { font-family: inherit; }
   width: 2px;
   background: var(--accent);
 }
+
+.nav-page.collapsed .nav-children { display: none; }
+.nav-item-row { display: flex; align-items: center; }
+.nav-item-row .nav-item { flex: 1; min-width: 0; }
+.nav-item-toggle {
+  flex: 0 0 auto;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px;
+  margin: 1px 2px 1px -2px;
+  color: var(--muted-2);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.nav-item-toggle:hover { background: var(--hover); color: var(--fg); }
+.nav-item-toggle .chev { transition: transform 0.18s ease; }
+.nav-page.collapsed .nav-item-toggle .chev { transform: rotate(-90deg); }
 .nav-section-toplink {
   display: flex; align-items: center; gap: 10px;
   padding: 8px 10px;
