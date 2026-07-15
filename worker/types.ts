@@ -11,6 +11,7 @@ export type Section = 'Home' | 'Square' | 'Circle' | 'Triangle';
 export interface PageRow {
   id: string;
   section: Section;
+  parent_id: string | null;
   title: string;
   eyebrow: string | null;
   lede: string | null;

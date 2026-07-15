@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { adminApi, type PageListItem } from '../lib/api';
 import { Link } from '../lib/router';
+import { flattenSection } from '../lib/pageTree';
 
 const SECTION_ORDER = ['Home', 'Square', 'Circle', 'Triangle'];
 
@@ -17,8 +18,8 @@ export function PageList() {
 
   const bySection = SECTION_ORDER.map((section) => ({
     section,
-    items: pages.filter((p) => p.section === section),
-  })).filter((g) => g.items.length > 0);
+    rows: flattenSection(pages, section),
+  })).filter((g) => g.rows.length > 0);
 
   return (
     <div>
@@ -39,9 +40,12 @@ export function PageList() {
             </colgroup>
             <thead><tr><th>Title</th><th>Status</th><th>Updated</th><th></th></tr></thead>
             <tbody>
-              {group.items.map((p) => (
+              {group.rows.map(({ page: p, depth }) => (
                 <tr key={p.id}>
-                  <td>{p.sectionTop ? `${p.title} (overview)` : p.title}</td>
+                  <td style={depth ? { paddingLeft: `${1 + depth * 1.25}em` } : undefined}>
+                    {depth > 0 && <span aria-hidden="true">↳ </span>}
+                    {p.sectionTop ? `${p.title} (overview)` : p.title}
+                  </td>
                   <td><span className={'status-badge status-' + p.status}>{p.status}</span></td>
                   <td>{new Date(p.updatedAt).toLocaleDateString()}</td>
                   <td><Link to={`/admin/pages/${p.id}/edit`}>Edit →</Link></td>

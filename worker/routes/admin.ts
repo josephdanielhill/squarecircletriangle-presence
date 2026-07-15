@@ -27,7 +27,7 @@ adminRoutes.get('/me', (c) => c.json({ email: c.get('adminEmail') }));
 adminRoutes.get('/pages', async (c) => {
   const sql = getDb(c.env);
   const rows = await sql(
-    `SELECT id, section, title, status, section_top AS "sectionTop", sort_order AS "sortOrder", updated_at AS "updatedAt"
+    `SELECT id, section, parent_id AS "parentId", title, status, section_top AS "sectionTop", sort_order AS "sortOrder", updated_at AS "updatedAt"
      FROM pages ORDER BY section, sort_order, title`
   );
   return c.json(rows);
@@ -41,21 +41,38 @@ adminRoutes.post('/pages', async (c) => {
   if (typeof body.title !== 'string' || !body.title.trim()) {
     return c.json({ error: 'title is required' }, 400);
   }
-  if (!SECTIONS.includes(body.section)) {
-    return c.json({ error: `section must be one of ${SECTIONS.join(', ')}` }, 400);
-  }
 
   const sql = getDb(c.env);
+
+  // A parent page (if given) determines the section -- a page always lives
+  // in the same section as its parent, so the client only needs to pick one
+  // of the two.
+  let section: string;
+  let parentId: string | null = null;
+  if (body.parentId !== undefined && body.parentId !== null) {
+    if (typeof body.parentId !== 'string') return c.json({ error: 'parentId must be a string or null' }, 400);
+    const parentRows = (await sql(`SELECT id, section FROM pages WHERE id = $1`, [body.parentId])) as PageRow[];
+    if (parentRows.length === 0) return c.json({ error: 'Parent page not found' }, 400);
+    parentId = body.parentId;
+    section = parentRows[0].section;
+  } else {
+    if (!SECTIONS.includes(body.section)) {
+      return c.json({ error: `section must be one of ${SECTIONS.join(', ')}` }, 400);
+    }
+    section = body.section;
+  }
+
   const existing = await sql(`SELECT id FROM pages WHERE id = $1`, [body.id]);
   if (existing.length > 0) return c.json({ error: 'A page with this id already exists' }, 409);
 
   const rows = (await sql(
-    `INSERT INTO pages (id, section, title, eyebrow, lede, lede_quote, section_top, icon, sort_order, status, created_by)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,'draft',$10)
-     RETURNING id, section, title, status`,
+    `INSERT INTO pages (id, section, parent_id, title, eyebrow, lede, lede_quote, section_top, icon, sort_order, status, created_by)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,'draft',$11)
+     RETURNING id, section, parent_id AS "parentId", title, status`,
     [
       body.id,
-      body.section,
+      section,
+      parentId,
       body.title,
       body.eyebrow ?? null,
       body.lede ?? null,
@@ -83,7 +100,7 @@ adminRoutes.put('/pages/:id', async (c) => {
   if (!body) return c.json({ error: 'Invalid JSON body' }, 400);
 
   const sql = getDb(c.env);
-  const existing = (await sql(`SELECT id FROM pages WHERE id = $1`, [id])) as { id: string }[];
+  const existing = (await sql(`SELECT id, parent_id FROM pages WHERE id = $1`, [id])) as { id: string; parent_id: string | null }[];
   if (existing.length === 0) return c.json({ error: 'Not found' }, 404);
 
   if (body.section !== undefined && !SECTIONS.includes(body.section)) {
@@ -91,6 +108,46 @@ adminRoutes.put('/pages/:id', async (c) => {
   }
   if (body.status !== undefined && body.status !== 'draft' && body.status !== 'published') {
     return c.json({ error: 'status must be draft or published' }, 400);
+  }
+  // A page's section always matches its parent's -- changing just the
+  // section on a nested page (without also clearing/changing its parent)
+  // would leave the two inconsistent.
+  if (body.section !== undefined && body.parentId === undefined && existing[0].parent_id !== null) {
+    return c.json({ error: 'This page is nested under a parent page; change or clear its parent to move it to a different section' }, 400);
+  }
+
+  // parentId has three states: absent (leave unchanged), null (clear -- page
+  // becomes top-level in its section), or a page id (nest under that page,
+  // inheriting its section). Since it can be explicitly cleared, it can't
+  // use the same COALESCE-on-null pattern as the other columns below.
+  let parentIdProvided = false;
+  let parentId: string | null = null;
+  let section = body.section ?? null;
+  if (body.parentId !== undefined) {
+    parentIdProvided = true;
+    if (body.parentId === null) {
+      parentId = null;
+    } else if (typeof body.parentId === 'string') {
+      if (body.parentId === id) return c.json({ error: 'A page cannot be its own parent' }, 400);
+      const parentRows = (await sql(`SELECT id, section FROM pages WHERE id = $1`, [body.parentId])) as PageRow[];
+      if (parentRows.length === 0) return c.json({ error: 'Parent page not found' }, 400);
+      const cycle = await sql(
+        `WITH RECURSIVE ancestors AS (
+           SELECT id, parent_id FROM pages WHERE id = $1
+           UNION ALL
+           SELECT p.id, p.parent_id FROM pages p JOIN ancestors a ON p.id = a.parent_id
+         )
+         SELECT id FROM ancestors WHERE id = $2`,
+        [body.parentId, id]
+      );
+      if (cycle.length > 0) {
+        return c.json({ error: 'That page is a descendant of this page and cannot be its parent' }, 400);
+      }
+      parentId = body.parentId;
+      section = parentRows[0].section;
+    } else {
+      return c.json({ error: 'parentId must be a string or null' }, 400);
+    }
   }
 
   let blocks: unknown = undefined;
@@ -103,6 +160,7 @@ adminRoutes.put('/pages/:id', async (c) => {
   const rows = (await sql(
     `UPDATE pages SET
        section = COALESCE($2, section),
+       parent_id = CASE WHEN $13 THEN $14 ELSE parent_id END,
        title = COALESCE($3, title),
        eyebrow = COALESCE($4, eyebrow),
        lede = COALESCE($5, lede),
@@ -118,7 +176,7 @@ adminRoutes.put('/pages/:id', async (c) => {
      RETURNING *`,
     [
       id,
-      body.section ?? null,
+      section,
       body.title ?? null,
       body.eyebrow ?? null,
       body.lede ?? null,
@@ -129,6 +187,8 @@ adminRoutes.put('/pages/:id', async (c) => {
       blocks ?? null,
       body.status ?? null,
       body.updatedLabel ?? null,
+      parentIdProvided,
+      parentId,
     ]
   )) as PageRow[];
 

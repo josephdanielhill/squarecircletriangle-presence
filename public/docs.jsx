@@ -85,6 +85,33 @@ function pagesBySection(pages) {
   return out;
 }
 
+// Groups pages by parentId (a page id, or the section name for top-level
+// pages) so nested pages -- e.g. Square -> Page 1 -> Page 1a -- can be
+// rendered as a tree instead of a flat per-section list.
+function pagesByParent(pages) {
+  const out = {};
+  pages.forEach(p => {
+    const key = p.parentId || ('section:' + p.section);
+    out[key] = out[key] || [];
+    out[key].push(p);
+  });
+  return out;
+}
+
+// Ancestor chain (top-level parent first) for the currently viewed page,
+// resolved against the full page list so we have their titles/ids.
+function getAncestors(page, pageList) {
+  const byId = {};
+  pageList.forEach(p => { byId[p.id] = p; });
+  const chain = [];
+  let cursor = page.parentId ? byId[page.parentId] : null;
+  while (cursor) {
+    chain.unshift(cursor);
+    cursor = cursor.parentId ? byId[cursor.parentId] : null;
+  }
+  return chain;
+}
+
 function BrandMark() {
   return (
     <span className="brand-mark" aria-hidden="true">
@@ -131,8 +158,27 @@ function Topbar({ onSearch, theme, onToggleTheme, onMenuOpen }) {
   );
 }
 
+// Renders a page's nav link plus its nested children (if any), indented
+// one step further per depth level.
+function NavNode({ page, tree, currentId, depth }) {
+  const children = tree['' + page.id] || [];
+  return (
+    <React.Fragment>
+      <a className={'nav-item' + (currentId === page.id ? ' active' : '')}
+         style={depth > 0 ? { paddingLeft: (12 + depth * 14) + 'px' } : undefined}
+         href={'#/' + page.id}>
+        {page.sectionTop ? 'Overview' : page.title}
+      </a>
+      {children.map(c => (
+        <NavNode key={c.id} page={c} tree={tree} currentId={currentId} depth={depth + 1} />
+      ))}
+    </React.Fragment>
+  );
+}
+
 function Sidebar({ pages, currentId, open, onClose }) {
   const bySection = pagesBySection(pages);
+  const tree = pagesByParent(pages);
 
   const [collapsed, setCollapsed] = React.useState(() => {
     const init = {};
@@ -162,8 +208,11 @@ function Sidebar({ pages, currentId, open, onClose }) {
   // Other Home-section pages (e.g. new ones created via the admin) get
   // listed under the Home link, same as Square/Circle/Triangle list theirs.
   // 'privacy' is excluded since it already has its own permanent footer link.
+  // homePage's own children are included too -- it's rendered specially
+  // above (not via NavNode), so its nested pages need to be spliced in here
+  // or they'd never appear in the tree at all.
   const extraHomePages = homePage
-    ? pages.filter(p => p.section === 'Home' && p.id !== homePage.id && p.id !== 'privacy')
+    ? [...(tree['section:Home'] || []).filter(p => p.id !== homePage.id && p.id !== 'privacy'), ...(tree[homePage.id] || [])]
     : [];
 
   return (
@@ -194,11 +243,7 @@ function Sidebar({ pages, currentId, open, onClose }) {
               {extraHomePages.length > 0 && (
                 <div className="nav-children">
                   {extraHomePages.map(p => (
-                    <a key={p.id}
-                       className={'nav-item' + (currentId === p.id ? ' active' : '')}
-                       href={'#/' + p.id}>
-                      {p.title}
-                    </a>
+                    <NavNode key={p.id} page={p} tree={tree} currentId={currentId} depth={0} />
                   ))}
                 </div>
               )}
@@ -213,8 +258,9 @@ function Sidebar({ pages, currentId, open, onClose }) {
         const sectionActive = pagesForSection.some(p => p.id === currentId);
 
         if (isShape) {
-          const topPage = pagesForSection.find(p => p.sectionTop);
-          const restPages = pagesForSection.filter(p => !p.sectionTop);
+          const topLevel = tree['section:' + sec.id] || [];
+          const topPage = topLevel.find(p => p.sectionTop);
+          const restPages = topLevel.filter(p => !p.sectionTop);
           const ordered = topPage ? [topPage, ...restPages] : restPages;
 
           return (
@@ -223,18 +269,14 @@ function Sidebar({ pages, currentId, open, onClose }) {
                       aria-expanded={!isCollapsed}>
                 <span className="nav-shape-icon">{G[sec.icon]}</span>
                 <span className="nav-shape-label">{sec.id}</span>
-                <span className="badge">{ordered.length}</span>
+                <span className="badge">{pagesForSection.length}</span>
                 <svg className="chev" viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="1.6">
                   <polyline points="4,6 8,10 12,6"></polyline>
                 </svg>
               </button>
               <div className="nav-children">
                 {ordered.map(p => (
-                  <a key={p.id}
-                     className={'nav-item' + (currentId === p.id ? ' active' : '')}
-                     href={'#/' + p.id}>
-                    {p.sectionTop ? 'Overview' : p.title}
-                  </a>
+                  <NavNode key={p.id} page={p} tree={tree} currentId={currentId} depth={0} />
                 ))}
               </div>
             </div>
@@ -251,12 +293,8 @@ function Sidebar({ pages, currentId, open, onClose }) {
               </svg>
             </button>
             <div className="nav-children">
-              {pagesForSection.map(p => (
-                <a key={p.id}
-                   className={'nav-item' + (currentId === p.id ? ' active' : '')}
-                   href={'#/' + p.id}>
-                  {p.title}
-                </a>
+              {(tree['section:' + sec.id] || []).map(p => (
+                <NavNode key={p.id} page={p} tree={tree} currentId={currentId} depth={0} />
               ))}
             </div>
           </div>
@@ -374,31 +412,31 @@ function PageView({ page, pageList }) {
   const idx = pageList.findIndex(p => p.id === page.id);
   const prev = idx > 0 ? pageList[idx - 1] : null;
   const next = idx >= 0 && idx < pageList.length - 1 ? pageList[idx + 1] : null;
+  const ancestors = React.useMemo(() => getAncestors(page, pageList), [page, pageList]);
 
   React.useEffect(() => { window.scrollTo({ top: 0 }); }, [page.id]);
+
+  // Section (non-clickable) + any ancestor pages (clickable) + the current
+  // page's own title (non-clickable), skipped when it'd just repeat the
+  // section (a section's overview page) or the Home crumb (welcome).
+  const crumbs = [];
+  if (page.section !== 'Home') crumbs.push({ id: 'section', label: page.section, href: null });
+  ancestors.forEach(a => crumbs.push({ id: a.id, label: a.title, href: '#/' + a.id }));
+  const showOwnTitle = !page.sectionTop && !(page.section === 'Home' && page.id === 'welcome');
+  if (showOwnTitle) crumbs.push({ id: page.id, label: page.title, href: null });
 
   return (
     <div className="page">
       <nav className="breadcrumb">
         <a href="#/welcome">Home</a>
-        {page.section !== 'Home' && (
-          <>
+        {crumbs.map((cr, i) => (
+          <React.Fragment key={cr.id}>
             <span className="sep">/</span>
-            <span className={page.sectionTop ? 'current' : ''}>{page.section}</span>
-          </>
-        )}
-        {!page.sectionTop && page.section !== 'Home' && (
-          <>
-            <span className="sep">/</span>
-            <span className="current">{page.title}</span>
-          </>
-        )}
-        {page.section === 'Home' && page.id !== 'welcome' && (
-          <>
-            <span className="sep">/</span>
-            <span className="current">{page.title}</span>
-          </>
-        )}
+            {cr.href
+              ? <a href={cr.href}>{cr.label}</a>
+              : <span className={i === crumbs.length - 1 ? 'current' : ''}>{cr.label}</span>}
+          </React.Fragment>
+        ))}
       </nav>
 
       {page.id === 'welcome' && (
