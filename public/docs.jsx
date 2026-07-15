@@ -158,21 +158,39 @@ function Topbar({ onSearch, theme, onToggleTheme, onMenuOpen }) {
   );
 }
 
-// Renders a page's nav link plus its nested children (if any), indented
-// one step further per depth level.
-function NavNode({ page, tree, currentId, depth }) {
-  const children = tree['' + page.id] || [];
+// Renders a page's nav link, plus -- if it has children -- a collapse/expand
+// toggle next to it and its nested children below, same idea as the
+// Square/Circle/Triangle section groups but one page deep at a time.
+// Nesting reuses the .nav-children indentation styling, so depth doesn't
+// need to be tracked explicitly.
+function NavNode({ page, tree, currentId, collapsed, onToggle }) {
+  const children = tree[page.id] || [];
+  const hasChildren = children.length > 0;
+  const isCollapsed = hasChildren && !!collapsed[page.id];
   return (
-    <React.Fragment>
-      <a className={'nav-item' + (currentId === page.id ? ' active' : '')}
-         style={depth > 0 ? { paddingLeft: (12 + depth * 14) + 'px' } : undefined}
-         href={'#/' + page.id}>
-        {page.sectionTop ? 'Overview' : page.title}
-      </a>
-      {children.map(c => (
-        <NavNode key={c.id} page={c} tree={tree} currentId={currentId} depth={depth + 1} />
-      ))}
-    </React.Fragment>
+    <div className={'nav-page' + (isCollapsed ? ' collapsed' : '')}>
+      <div className="nav-item-row">
+        <a className={'nav-item' + (currentId === page.id ? ' active' : '')}
+           href={'#/' + page.id}>
+          {page.sectionTop ? 'Overview' : page.title}
+        </a>
+        {hasChildren && (
+          <button type="button" className="nav-item-toggle" onClick={() => onToggle(page.id)}
+                  aria-label={(isCollapsed ? 'Expand ' : 'Collapse ') + page.title} aria-expanded={!isCollapsed}>
+            <svg className="chev" viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <polyline points="4,6 8,10 12,6"></polyline>
+            </svg>
+          </button>
+        )}
+      </div>
+      {hasChildren && (
+        <div className="nav-children">
+          {children.map(c => (
+            <NavNode key={c.id} page={c} tree={tree} currentId={currentId} collapsed={collapsed} onToggle={onToggle} />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -187,17 +205,32 @@ function Sidebar({ pages, currentId, open, onClose }) {
         init[s.id] = !s.defaultOpen;
       }
     });
+    // Pages with children start collapsed too, same default as sections.
+    Object.keys(tree).forEach(key => {
+      if (!key.startsWith('section:')) init[key] = true;
+    });
     return init;
   });
 
+  const toggle = (key) => setCollapsed(c => ({ ...c, [key]: !c[key] }));
+
   React.useEffect(() => {
     const sec = SECTIONS.find(s => (bySection[s.id] || []).some(p => p.id === currentId));
+    const updates = {};
     if (sec && (sec.kind === 'shape' || sec.kind === 'group')) {
-      setCollapsed(c => ({ ...c, [sec.id]: false }));
+      updates[sec.id] = false;
     }
-  }, [currentId]);
-
-  const toggle = (sec) => setCollapsed(c => ({ ...c, [sec]: !c[sec] }));
+    // Expand every ancestor page of the current page too, so landing on a
+    // deeply nested page (direct link, refresh) shows it in the sidebar
+    // instead of hiding it behind collapsed parents.
+    const currentPage = pages.find(p => p.id === currentId);
+    if (currentPage) {
+      getAncestors(currentPage, pages).forEach(a => { updates[a.id] = false; });
+    }
+    if (Object.keys(updates).length > 0) {
+      setCollapsed(c => ({ ...c, ...updates }));
+    }
+  }, [currentId, pages]);
 
   // 'welcome' is the dedicated landing page (also hardcoded elsewhere, e.g.
   // the topbar brand link and the homepage hero image) -- prefer it
@@ -243,7 +276,7 @@ function Sidebar({ pages, currentId, open, onClose }) {
               {extraHomePages.length > 0 && (
                 <div className="nav-children">
                   {extraHomePages.map(p => (
-                    <NavNode key={p.id} page={p} tree={tree} currentId={currentId} depth={0} />
+                    <NavNode key={p.id} page={p} tree={tree} currentId={currentId} collapsed={collapsed} onToggle={toggle} />
                   ))}
                 </div>
               )}
@@ -276,7 +309,7 @@ function Sidebar({ pages, currentId, open, onClose }) {
               </button>
               <div className="nav-children">
                 {ordered.map(p => (
-                  <NavNode key={p.id} page={p} tree={tree} currentId={currentId} depth={0} />
+                  <NavNode key={p.id} page={p} tree={tree} currentId={currentId} collapsed={collapsed} onToggle={toggle} />
                 ))}
               </div>
             </div>
@@ -294,7 +327,7 @@ function Sidebar({ pages, currentId, open, onClose }) {
             </button>
             <div className="nav-children">
               {(tree['section:' + sec.id] || []).map(p => (
-                <NavNode key={p.id} page={p} tree={tree} currentId={currentId} depth={0} />
+                <NavNode key={p.id} page={p} tree={tree} currentId={currentId} collapsed={collapsed} onToggle={toggle} />
               ))}
             </div>
           </div>
