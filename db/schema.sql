@@ -13,6 +13,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE TABLE IF NOT EXISTS pages (
   id            text PRIMARY KEY,              -- slug, e.g. 'triangle-deckcrm'
   section       text NOT NULL CHECK (section IN ('Home','Square','Circle','Triangle')),
+  parent_id     text REFERENCES pages(id) ON DELETE SET NULL, -- optional parent page, for nesting within a section
   title         text NOT NULL,
   eyebrow       text,
   lede          text,
@@ -27,6 +28,7 @@ CREATE TABLE IF NOT EXISTS pages (
   updated_at    timestamptz NOT NULL DEFAULT now(),
   created_by    text                             -- Neon Auth JWT `sub`, null for migrated/seeded rows
 );
+CREATE INDEX IF NOT EXISTS pages_parent_id_idx ON pages(parent_id);
 
 CREATE TABLE IF NOT EXISTS guest_tokens (
   id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),

@@ -30,6 +30,7 @@ async function adminFetch(path: string, init: RequestInit = {}): Promise<any> {
 export interface PageListItem {
   id: string;
   section: 'Home' | 'Square' | 'Circle' | 'Triangle';
+  parentId: string | null;
   title: string;
   status: 'draft' | 'published';
   sectionTop: boolean;
@@ -40,6 +41,7 @@ export interface PageListItem {
 export interface PageDetail {
   id: string;
   section: 'Home' | 'Square' | 'Circle' | 'Triangle';
+  parent_id: string | null;
   title: string;
   eyebrow: string | null;
   lede: string | null;
@@ -85,7 +87,8 @@ export const adminApi = {
   getPage: (id: string): Promise<PageDetail> => adminFetch(`/pages/${encodeURIComponent(id)}`),
   createPage: (body: {
     id: string;
-    section: string;
+    section?: string;
+    parentId?: string | null;
     title: string;
     eyebrow?: string;
     lede?: string;
@@ -94,7 +97,7 @@ export const adminApi = {
     icon?: string;
   }) => adminFetch('/pages', { method: 'POST', body: JSON.stringify(body) }),
   updatePage: (id: string, body: Partial<{
-    section: string; title: string; eyebrow: string; lede: string; ledeQuote: boolean;
+    section: string; parentId: string | null; title: string; eyebrow: string; lede: string; ledeQuote: boolean;
     sectionTop: boolean; icon: string; sortOrder: number; blocks: Block[]; status: 'draft' | 'published';
     updatedLabel: string;
   }>) => adminFetch(`/pages/${encodeURIComponent(id)}`, { method: 'PUT', body: JSON.stringify(body) }),

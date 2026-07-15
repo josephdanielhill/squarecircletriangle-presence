@@ -1,23 +1,26 @@
 import { useEffect, useState } from 'react';
-import { adminApi, type PageDetail } from '../lib/api';
+import { adminApi, type PageDetail, type PageListItem } from '../lib/api';
 import { useRouter, Link } from '../lib/router';
 import { BlockEditor } from '../components/BlockEditor';
 import { BlockRenderer } from '../components/BlockRenderer';
 import { GuestLinksPanel } from './GuestLinksPanel';
+import { PageSettingsPanel } from './PageSettingsPanel';
 import type { Block } from '../lib/blocks';
 
 export function PageEditor({ pageId }: { pageId: string }) {
   const { navigate } = useRouter();
   const [page, setPage] = useState<PageDetail | null>(null);
+  const [pages, setPages] = useState<PageListItem[]>([]);
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState<'draft' | 'publish' | null>(null);
-  const [tab, setTab] = useState<'content' | 'guests'>('content');
+  const [tab, setTab] = useState<'content' | 'settings' | 'guests'>('content');
   const [showPreview, setShowPreview] = useState(true);
 
   useEffect(() => {
     setPage(null);
     adminApi.getPage(pageId).then((p) => { setPage(p); setBlocks(p.blocks || []); }).catch((e) => setError(e.message));
+    adminApi.listPages().then(setPages).catch(() => {});
   }, [pageId]);
 
   const save = async (status: 'draft' | 'published') => {
@@ -64,10 +67,11 @@ export function PageEditor({ pageId }: { pageId: string }) {
 
       <div className="tab-row">
         <button className={'tab' + (tab === 'content' ? ' active' : '')} onClick={() => setTab('content')}>Content</button>
+        <button className={'tab' + (tab === 'settings' ? ' active' : '')} onClick={() => setTab('settings')}>Settings</button>
         <button className={'tab' + (tab === 'guests' ? ' active' : '')} onClick={() => setTab('guests')}>Guest links</button>
       </div>
 
-      {tab === 'content' ? (
+      {tab === 'content' && (
         <div className={'editor-split' + (showPreview ? '' : ' no-preview')}>
           <div className="editor-col">
             <div className="preview-head">
@@ -89,7 +93,13 @@ export function PageEditor({ pageId }: { pageId: string }) {
             </div>
           )}
         </div>
-      ) : (
+      )}
+
+      {tab === 'settings' && (
+        <PageSettingsPanel page={page} pages={pages} onSaved={setPage} />
+      )}
+
+      {tab === 'guests' && (
         <GuestLinksPanel pageId={pageId} />
       )}
 
