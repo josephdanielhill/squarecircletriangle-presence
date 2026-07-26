@@ -76,12 +76,18 @@ function CardGridView({ block }: { block: CardGridBlockT }) {
 }
 
 function ChangelogTableView({ block }: { block: ChangelogTableBlockT }) {
+  const entries = [...block.entries].sort((a, b) => {
+    const bTime = Date.parse(b.date);
+    const aTime = Date.parse(a.date);
+    if (isNaN(bTime) || isNaN(aTime)) return 0;
+    return bTime - aTime;
+  });
   return (
     <div className="tbl">
       <table>
         <thead><tr><th style={{ width: 130 }}>Date</th><th>Changes &amp; Milestones</th></tr></thead>
         <tbody>
-          {block.entries.map((entry, i) => (
+          {entries.map((entry, i) => (
             <tr key={i}>
               <td>{entry.date}</td>
               <td>
