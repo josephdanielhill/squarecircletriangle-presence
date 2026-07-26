@@ -60,6 +60,12 @@ function CardGridBlock({ block }) {
 }
 
 function ChangelogTableBlock({ block }) {
+  const entries = [...block.entries].sort((a, b) => {
+    const bTime = Date.parse(b.date);
+    const aTime = Date.parse(a.date);
+    if (isNaN(bTime) || isNaN(aTime)) return 0;
+    return bTime - aTime;
+  });
   return (
     <div className="tbl">
       <table>
@@ -70,7 +76,7 @@ function ChangelogTableBlock({ block }) {
           </tr>
         </thead>
         <tbody>
-          {block.entries.map((entry, i) => (
+          {entries.map((entry, i) => (
             <tr key={i}>
               <td>{entry.date}</td>
               <td>
