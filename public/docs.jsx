@@ -460,6 +460,8 @@ function PageView({ page, pageList }) {
 
   return (
     <div className="page">
+      {page.id === 'welcome' && <div className="landing-spacer"></div>}
+
       <nav className="breadcrumb">
         <a href="#/welcome">Home</a>
         {crumbs.map((cr, i) => (
@@ -473,9 +475,21 @@ function PageView({ page, pageList }) {
       </nav>
 
       {page.id === 'welcome' && (
-        <div className="homepage-hero">
-          <img src="welcome-hero.jpg" alt="Sunrise over mountains" fetchpriority="high" />
-        </div>
+        <>
+          <div className="homepage-hero-placeholder"></div>
+          <div className="homepage-hero-transition-container">
+            <img src="welcome-hero.jpg" alt="Sunrise over mountains" fetchpriority="high" />
+            <div className="landing-overlay">
+              <div className="landing-content">
+                <h1 className="landing-title">SquareCircleTriangle</h1>
+                <p className="landing-subtitle">Teach what we know. Convene the people who care. Build the tools they need next.</p>
+                <div className="scroll-indicator">
+                  <span className="scroll-arrow">↓</span> Scroll to enter
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
       )}
 
       {page.eyebrow && <div className="page-eyebrow">{page.eyebrow}</div>}
@@ -632,8 +646,137 @@ window.SCT_App = function App() {
     main = <PageView page={page} pageList={pages} />;
   }
 
+  const isWelcome = page && page.id === 'welcome';
+
+  React.useEffect(() => {
+    if (!isWelcome) {
+      // Clean up variables when leaving welcome page
+      document.documentElement.style.removeProperty('--hero-dest-top');
+      document.documentElement.style.removeProperty('--hero-dest-left');
+      document.documentElement.style.removeProperty('--hero-dest-width');
+      document.documentElement.style.removeProperty('--hero-dest-height');
+      document.documentElement.style.removeProperty('--hero-limit');
+      return;
+    }
+
+    const updateCoordinates = () => {
+      const placeholder = document.querySelector('.homepage-hero-placeholder');
+      if (!placeholder) return;
+
+      const rect = placeholder.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+      const destTop = rect.top + scrollTop;
+      const destLeft = rect.left + scrollLeft;
+      const destWidth = rect.width;
+      const destHeight = rect.height;
+
+      document.documentElement.style.setProperty('--hero-dest-top', `${destTop}px`);
+      document.documentElement.style.setProperty('--hero-dest-left', `${destLeft}px`);
+      document.documentElement.style.setProperty('--hero-dest-width', `${destWidth}px`);
+      document.documentElement.style.setProperty('--hero-dest-height', `${destHeight}px`);
+      document.documentElement.style.setProperty('--hero-limit', `${window.innerHeight}px`);
+    };
+
+    // Measure initially and after a short delay to allow layout to settle
+    updateCoordinates();
+    const t1 = setTimeout(updateCoordinates, 50);
+    const t2 = setTimeout(updateCoordinates, 150);
+
+    window.addEventListener('resize', updateCoordinates);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      window.removeEventListener('resize', updateCoordinates);
+    };
+  }, [isWelcome]);
+
+  React.useEffect(() => {
+    if (!isWelcome) {
+      // Reset inline styles on topbar and sidebar when leaving welcome page
+      const topbar = document.querySelector('.topbar');
+      const sidebar = document.querySelector('.sidebar');
+      if (topbar) {
+        topbar.style.opacity = '';
+        topbar.style.pointerEvents = '';
+      }
+      if (sidebar) {
+        sidebar.style.opacity = '';
+        sidebar.style.pointerEvents = '';
+      }
+      return;
+    }
+
+    // Check support for scroll-driven animations (SDA)
+    const supportsSDA = window.CSS && window.CSS.supports && window.CSS.supports('(animation-timeline: scroll()) and (animation-range: 0% 100%)');
+    if (supportsSDA) return;
+
+    const onScroll = () => {
+      const container = document.querySelector('.homepage-hero-transition-container');
+      const placeholder = document.querySelector('.homepage-hero-placeholder');
+      const topbar = document.querySelector('.topbar');
+      const sidebar = document.querySelector('.sidebar');
+      const landingOverlay = document.querySelector('.landing-overlay');
+
+      if (!container || !placeholder) return;
+
+      const rect = placeholder.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+      const destTop = rect.top + scrollTop;
+      const destLeft = rect.left + scrollLeft;
+      const destWidth = rect.width;
+      const destHeight = rect.height;
+
+      const scrollY = window.scrollY;
+      const limit = window.innerHeight;
+      const pct = Math.min(1, Math.max(0, scrollY / limit));
+
+      // Interpolate coordinates
+      const currentTop = destTop * pct;
+      const currentLeft = destLeft * pct;
+      const currentWidth = window.innerWidth + (destWidth - window.innerWidth) * pct;
+      const currentHeight = window.innerHeight + (destHeight - window.innerHeight) * pct;
+      const currentBorderRadius = 10 * pct;
+
+      container.style.top = `${currentTop}px`;
+      container.style.left = `${currentLeft}px`;
+      container.style.width = `${currentWidth}px`;
+      container.style.height = `${currentHeight}px`;
+      container.style.borderRadius = `${currentBorderRadius}px`;
+      container.style.zIndex = pct >= 0.99 ? '1' : '100';
+
+      // Interpolate UI opacities
+      if (topbar) {
+        topbar.style.opacity = pct;
+        topbar.style.pointerEvents = pct > 0.1 ? 'auto' : 'none';
+      }
+      if (sidebar) {
+        sidebar.style.opacity = pct;
+        sidebar.style.pointerEvents = pct > 0.1 ? 'auto' : 'none';
+      }
+
+      // Interpolate overlay opacity
+      if (landingOverlay) {
+        const overlayPct = Math.min(1, Math.max(0, scrollY / (limit * 0.6)));
+        landingOverlay.style.opacity = 1 - overlayPct;
+        landingOverlay.style.transform = `translateY(${-50 * overlayPct}px)`;
+      }
+    };
+
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [isWelcome]);
+
   return (
-    <>
+    <div className={isWelcome ? 'is-welcome-page' : ''}>
       <Topbar onSearch={() => setSearchOpen(true)}
               theme={theme} onToggleTheme={toggleTheme}
               onMenuOpen={() => setSidebarOpen(true)} />
@@ -676,6 +819,6 @@ window.SCT_App = function App() {
             onChange={(v) => setTweak('density', v)} />
         </TweakSection>
       </TweaksPanel>
-    </>
+    </div>
   );
 };
