@@ -66,3 +66,11 @@ CREATE UNIQUE INDEX IF NOT EXISTS page_drafts_one_pending_per_page
 -- at most one in-progress (unsubmitted) save per page, same idea
 CREATE UNIQUE INDEX IF NOT EXISTS page_drafts_one_in_progress_per_page
   ON page_drafts(page_id) WHERE status = 'in_progress';
+
+CREATE TABLE IF NOT EXISTS page_templates (
+  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        text NOT NULL,
+  blocks      jsonb NOT NULL,               -- saved block array, see worker/blocks.ts for the shape
+  created_at  timestamptz NOT NULL DEFAULT now(),
+  created_by  text                          -- Neon Auth JWT `sub`, null for migrated/seeded rows
+);

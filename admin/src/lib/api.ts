@@ -81,6 +81,20 @@ export interface DraftDetail extends DraftListItem {
   publishedBlocks: Block[];
 }
 
+export interface TemplateListItem {
+  id: string;
+  name: string;
+  blockCount: number;
+  createdAt: string;
+}
+
+export interface TemplateDetail {
+  id: string;
+  name: string;
+  createdAt: string;
+  blocks: Block[];
+}
+
 export const adminApi = {
   me: () => adminFetch('/me'),
   listPages: (): Promise<PageListItem[]> => adminFetch('/pages'),
@@ -95,6 +109,7 @@ export const adminApi = {
     ledeQuote?: boolean;
     sectionTop?: boolean;
     icon?: string;
+    templateId?: string;
   }) => adminFetch('/pages', { method: 'POST', body: JSON.stringify(body) }),
   updatePage: (id: string, body: Partial<{
     section: string; parentId: string | null; title: string; eyebrow: string; lede: string; ledeQuote: boolean;
@@ -102,6 +117,15 @@ export const adminApi = {
     updatedLabel: string;
   }>) => adminFetch(`/pages/${encodeURIComponent(id)}`, { method: 'PUT', body: JSON.stringify(body) }),
   deletePage: (id: string) => adminFetch(`/pages/${encodeURIComponent(id)}`, { method: 'DELETE' }),
+  duplicatePage: (id: string, body: { title: string }): Promise<{
+    id: string; section: string; parentId: string | null; title: string; status: 'draft' | 'published';
+  }> => adminFetch(`/pages/${encodeURIComponent(id)}/duplicate`, { method: 'POST', body: JSON.stringify(body) }),
+
+  listTemplates: (): Promise<TemplateListItem[]> => adminFetch('/templates'),
+  getTemplate: (id: string): Promise<TemplateDetail> => adminFetch(`/templates/${encodeURIComponent(id)}`),
+  createTemplate: (body: { name: string; blocks: Block[] }): Promise<TemplateListItem> =>
+    adminFetch('/templates', { method: 'POST', body: JSON.stringify(body) }),
+  deleteTemplate: (id: string) => adminFetch(`/templates/${encodeURIComponent(id)}`, { method: 'DELETE' }),
 
   listGuestTokens: (pageId: string): Promise<GuestTokenItem[]> => adminFetch(`/pages/${encodeURIComponent(pageId)}/guest-tokens`),
   createGuestToken: (pageId: string, body: { label?: string; note?: string; expiresAt?: string }): Promise<GuestTokenItem> =>

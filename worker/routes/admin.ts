@@ -1,14 +1,29 @@
 import { Hono } from 'hono';
-import { getDb } from '../db';
+import { getDb, type Sql } from '../db';
 import { requireAdmin, AuthError } from '../auth';
-import { validateBlocks } from '../blocks';
-import { randomToken } from '../util';
-import type { Env, PageRow, GuestTokenRow, PageDraftRow } from '../types';
+import { validateBlocks, regenerateBlockIds } from '../blocks';
+import { randomToken, slugify } from '../util';
+import type { Env, PageRow, GuestTokenRow, PageDraftRow, PageTemplateRow } from '../types';
 
 export const adminRoutes = new Hono<{ Bindings: Env; Variables: { adminEmail: string; adminSub: string } }>();
 
 const SLUG_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const SECTIONS = ['Home', 'Square', 'Circle', 'Triangle'];
+
+// Generates a slug from `base` (via slugify), appending -2, -3, ... until
+// it's unique. Used to name a duplicated page from its new title, since
+// there's no way to rename a page's slug after creation.
+async function uniqueSlug(sql: Sql, base: string): Promise<string> {
+  const cleaned = slugify(base) || 'page';
+  let candidate = cleaned;
+  let n = 2;
+  while (true) {
+    const existing = await sql(`SELECT id FROM pages WHERE id = $1`, [candidate]);
+    if (existing.length === 0) return candidate;
+    candidate = `${cleaned}-${n}`;
+    n++;
+  }
+}
 
 adminRoutes.use('*', async (c, next) => {
   try {
@@ -65,9 +80,20 @@ adminRoutes.post('/pages', async (c) => {
   const existing = await sql(`SELECT id FROM pages WHERE id = $1`, [body.id]);
   if (existing.length > 0) return c.json({ error: 'A page with this id already exists' }, 409);
 
+  let blocks: unknown[] = [];
+  if (body.templateId !== undefined && body.templateId !== null) {
+    if (typeof body.templateId !== 'string') return c.json({ error: 'templateId must be a string' }, 400);
+    const templateRows = (await sql(`SELECT blocks FROM page_templates WHERE id = $1`, [body.templateId])) as PageTemplateRow[];
+    if (templateRows.length === 0) return c.json({ error: 'Template not found' }, 400);
+    blocks = regenerateBlockIds(templateRows[0].blocks as any);
+    const result = validateBlocks(blocks);
+    if (!result.ok) return c.json({ error: result.error }, 400);
+    blocks = result.blocks;
+  }
+
   const rows = (await sql(
-    `INSERT INTO pages (id, section, parent_id, title, eyebrow, lede, lede_quote, section_top, icon, sort_order, status, created_by)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,'draft',$11)
+    `INSERT INTO pages (id, section, parent_id, title, eyebrow, lede, lede_quote, section_top, icon, sort_order, blocks, status, created_by)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11::jsonb,'draft',$12)
      RETURNING id, section, parent_id AS "parentId", title, status`,
     [
       body.id,
@@ -80,6 +106,7 @@ adminRoutes.post('/pages', async (c) => {
       !!body.sectionTop,
       body.icon ?? null,
       body.sortOrder ?? 0,
+      JSON.stringify(blocks),
       c.get('adminSub') || null,
     ]
   )) as PageRow[];
@@ -195,9 +222,93 @@ adminRoutes.put('/pages/:id', async (c) => {
   return c.json(rows[0]);
 });
 
+adminRoutes.post('/pages/:id/duplicate', async (c) => {
+  const sourceId = c.req.param('id');
+  const body = await c.req.json().catch(() => null);
+  if (!body || typeof body.title !== 'string' || !body.title.trim()) {
+    return c.json({ error: 'title is required' }, 400);
+  }
+
+  const sql = getDb(c.env);
+  const sourceRows = (await sql(`SELECT * FROM pages WHERE id = $1`, [sourceId])) as PageRow[];
+  if (sourceRows.length === 0) return c.json({ error: 'Not found' }, 404);
+  const source = sourceRows[0];
+
+  const newId = await uniqueSlug(sql, body.title);
+  const blocks = regenerateBlockIds(source.blocks as any);
+
+  const rows = (await sql(
+    `INSERT INTO pages (id, section, parent_id, title, eyebrow, lede, lede_quote, section_top, icon, sort_order, blocks, status, created_by)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,false,null,$8,$9::jsonb,'draft',$10)
+     RETURNING id, section, parent_id AS "parentId", title, status`,
+    [
+      newId,
+      source.section,
+      source.parent_id,
+      body.title,
+      source.eyebrow,
+      source.lede,
+      source.lede_quote,
+      source.sort_order,
+      JSON.stringify(blocks),
+      c.get('adminSub') || null,
+    ]
+  )) as PageRow[];
+
+  return c.json(rows[0], 201);
+});
+
 adminRoutes.delete('/pages/:id', async (c) => {
   const sql = getDb(c.env);
   const rows = await sql(`DELETE FROM pages WHERE id = $1 RETURNING id`, [c.req.param('id')]);
+  if (rows.length === 0) return c.json({ error: 'Not found' }, 404);
+  return c.json({ ok: true });
+});
+
+adminRoutes.get('/templates', async (c) => {
+  const sql = getDb(c.env);
+  const rows = await sql(
+    `SELECT id, name, jsonb_array_length(blocks) AS "blockCount", created_at AS "createdAt"
+     FROM page_templates ORDER BY created_at DESC`
+  );
+  return c.json(rows);
+});
+
+adminRoutes.post('/templates', async (c) => {
+  const body = await c.req.json().catch(() => null);
+  if (!body || typeof body.name !== 'string' || !body.name.trim()) {
+    return c.json({ error: 'name is required' }, 400);
+  }
+  const result = validateBlocks(body.blocks);
+  if (!result.ok) return c.json({ error: result.error }, 400);
+
+  const sql = getDb(c.env);
+  const rows = (await sql(
+    `INSERT INTO page_templates (name, blocks, created_by)
+     VALUES ($1, $2::jsonb, $3)
+     RETURNING id, name, jsonb_array_length(blocks) AS "blockCount", created_at AS "createdAt"`,
+    [body.name, JSON.stringify(result.blocks), c.get('adminSub') || null]
+  )) as PageTemplateRow[];
+
+  return c.json(rows[0], 201);
+});
+
+adminRoutes.get('/templates/:id', async (c) => {
+  const sql = getDb(c.env);
+  const rows = (await sql(`SELECT * FROM page_templates WHERE id = $1`, [c.req.param('id')])) as PageTemplateRow[];
+  if (rows.length === 0) return c.json({ error: 'Not found' }, 404);
+  const row = rows[0];
+  return c.json({
+    id: row.id,
+    name: row.name,
+    createdAt: row.created_at,
+    blocks: regenerateBlockIds(row.blocks as any),
+  });
+});
+
+adminRoutes.delete('/templates/:id', async (c) => {
+  const sql = getDb(c.env);
+  const rows = await sql(`DELETE FROM page_templates WHERE id = $1 RETURNING id`, [c.req.param('id')]);
   if (rows.length === 0) return c.json({ error: 'Not found' }, 404);
   return c.json({ ok: true });
 });

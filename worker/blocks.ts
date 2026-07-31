@@ -66,6 +66,17 @@ export function validateBlocks(input: unknown): { ok: true; blocks: Block[] } | 
   return { ok: true, blocks: input as Block[] };
 }
 
+/**
+ * Regenerates each top-level block's id (only top-level blocks carry one,
+ * used as React keys in the renderers). Used whenever a block array is
+ * copied into a new page -- duplicating a page or applying a template --
+ * so the copy can never collide with its source if both are ever rendered
+ * client-side together.
+ */
+export function regenerateBlockIds(blocks: Block[]): Block[] {
+  return blocks.map((b) => ({ ...b, id: crypto.randomUUID() }));
+}
+
 function isRichText(v: unknown): v is RichText {
   return (
     Array.isArray(v) &&
