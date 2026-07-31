@@ -6,6 +6,7 @@ import { PageNew } from './routes/PageNew';
 import { PageEditor } from './routes/PageEditor';
 import { DraftQueue } from './routes/DraftQueue';
 import { DraftReview } from './routes/DraftReview';
+import { TemplateList } from './routes/TemplateList';
 
 function Shell({ children }: { children: React.ReactNode }) {
   const session = auth.useSession();
@@ -17,6 +18,7 @@ function Shell({ children }: { children: React.ReactNode }) {
         <Link to="/admin/pages" className="admin-brand">SquareCircleTriangle · Admin</Link>
         <nav className="admin-nav">
           <Link to="/admin/pages">Pages</Link>
+          <Link to="/admin/templates">Templates</Link>
           <Link to="/admin/drafts">Drafts</Link>
         </nav>
         <div className="admin-topbar-right">
@@ -35,6 +37,7 @@ function Routes() {
   let params;
   if ((params = matchRoute('/admin/pages/new', path))) return <PageNew />;
   if ((params = matchRoute('/admin/pages/:id/edit', path))) return <PageEditor pageId={params.id} />;
+  if ((params = matchRoute('/admin/templates', path))) return <TemplateList />;
   if ((params = matchRoute('/admin/drafts/:draftId', path))) return <DraftReview draftId={params.draftId} />;
   if ((params = matchRoute('/admin/drafts', path))) return <DraftQueue />;
   return <PageList />;

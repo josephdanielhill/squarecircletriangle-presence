@@ -40,6 +40,14 @@ export interface GuestTokenRow {
   last_used_at: string | null;
 }
 
+export interface PageTemplateRow {
+  id: string;
+  name: string;
+  blocks: unknown[];
+  created_at: string;
+  created_by: string | null;
+}
+
 export interface PageDraftRow {
   id: string;
   page_id: string;

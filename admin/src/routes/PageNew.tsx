@@ -3,21 +3,26 @@ import { adminApi } from '../lib/api';
 import { useRouter } from '../lib/router';
 import { slugify } from '../lib/blocks';
 import { buildParentOptions, parseParentValue } from '../lib/pageTree';
-import type { PageListItem } from '../lib/api';
+import type { PageListItem, TemplateListItem } from '../lib/api';
 
 export function PageNew() {
   const { navigate } = useRouter();
   const [pages, setPages] = useState<PageListItem[]>([]);
+  const [templates, setTemplates] = useState<TemplateListItem[]>([]);
   const [title, setTitle] = useState('');
   const [id, setId] = useState('');
   const [idTouched, setIdTouched] = useState(false);
   const [parentValue, setParentValue] = useState('section:Triangle');
   const [eyebrow, setEyebrow] = useState('');
   const [lede, setLede] = useState('');
+  const [templateId, setTemplateId] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => { adminApi.listPages().then(setPages).catch(() => {}); }, []);
+  useEffect(() => {
+    adminApi.listPages().then(setPages).catch(() => {});
+    adminApi.listTemplates().then(setTemplates).catch(() => {});
+  }, []);
 
   const parentOptions = buildParentOptions(pages);
 
@@ -27,7 +32,10 @@ export function PageNew() {
     setError(null);
     try {
       const { section, parentId } = parseParentValue(parentValue);
-      const page = await adminApi.createPage({ id, section, parentId, title, eyebrow, lede });
+      const page = await adminApi.createPage({
+        id, section, parentId, title, eyebrow, lede,
+        templateId: templateId || undefined,
+      });
       navigate(`/admin/pages/${page.id}/edit`);
     } catch (err: any) {
       setError(err.message || 'Failed to create page');
@@ -68,6 +76,16 @@ export function PageNew() {
         <label className="field">
           <span className="field-label">Lede (optional)</span>
           <textarea className="field-textarea" rows={2} value={lede} onChange={(e) => setLede(e.target.value)} />
+        </label>
+        <label className="field">
+          <span className="field-label">Start from a template (optional)</span>
+          <select className="field-input" value={templateId} onChange={(e) => setTemplateId(e.target.value)}>
+            <option value="">— Blank page —</option>
+            {templates.map((t) => (
+              <option key={t.id} value={t.id}>{t.name} ({t.blockCount} blocks)</option>
+            ))}
+          </select>
+          <span className="field-hint">Pre-fills the new page's content from a saved template.</span>
         </label>
         {error && <p className="error-text">{error}</p>}
         <p className="field-hint">The page is created as a draft. Add content and publish it from the editor.</p>

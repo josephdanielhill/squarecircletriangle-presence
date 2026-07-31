@@ -1,19 +1,35 @@
 import { useEffect, useState } from 'react';
 import { adminApi, type PageListItem } from '../lib/api';
-import { Link } from '../lib/router';
+import { Link, useRouter } from '../lib/router';
 import { flattenSection } from '../lib/pageTree';
 
 const SECTION_ORDER = ['Home', 'Square', 'Circle', 'Triangle'];
 
 export function PageList() {
+  const { navigate } = useRouter();
   const [pages, setPages] = useState<PageListItem[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   useEffect(() => {
     adminApi.listPages().then(setPages).catch((e) => setError(e.message));
   }, []);
 
-  if (error) return <p className="error-text">{error}</p>;
+  const duplicate = async (p: PageListItem) => {
+    const title = prompt('Title for the duplicate:', `${p.title} (copy)`);
+    if (!title || !title.trim()) return;
+    setBusyId(p.id);
+    setError(null);
+    try {
+      const created = await adminApi.duplicatePage(p.id, { title: title.trim() });
+      navigate(`/admin/pages/${created.id}/edit`);
+    } catch (e: any) {
+      setError(e.message || 'Failed to duplicate page');
+      setBusyId(null);
+    }
+  };
+
+  if (error && !pages) return <p className="error-text">{error}</p>;
   if (!pages) return <p className="field-hint">Loading…</p>;
 
   const bySection = SECTION_ORDER.map((section) => ({
@@ -27,6 +43,8 @@ export function PageList() {
         <h1>Pages</h1>
         <Link to="/admin/pages/new" className="btn-primary">+ New page</Link>
       </div>
+
+      {error && <p className="error-text">{error}</p>}
 
       {bySection.map((group) => (
         <div key={group.section} className="page-list-section">
@@ -48,7 +66,12 @@ export function PageList() {
                   </td>
                   <td><span className={'status-badge status-' + p.status}>{p.status}</span></td>
                   <td>{new Date(p.updatedAt).toLocaleDateString()}</td>
-                  <td><Link to={`/admin/pages/${p.id}/edit`}>Edit →</Link></td>
+                  <td className="row-actions">
+                    <Link to={`/admin/pages/${p.id}/edit`}>Edit →</Link>
+                    <button className="btn-link" disabled={busyId === p.id} onClick={() => duplicate(p)}>
+                      {busyId === p.id ? 'Duplicating…' : 'Duplicate'}
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
