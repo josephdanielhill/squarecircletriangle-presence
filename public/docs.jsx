@@ -32,6 +32,7 @@ function useHashRoute() {
 function usePageList() {
   const [pages, setPages] = React.useState(null);
   const [error, setError] = React.useState(null);
+  const [reloadKey, setReloadKey] = React.useState(0);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -43,9 +44,15 @@ function usePageList() {
       .then((data) => { if (!cancelled) setPages(data); })
       .catch((e) => { if (!cancelled) setError(e.message || 'Failed to load pages'); });
     return () => { cancelled = true; };
-  }, []);
+  }, [reloadKey]);
 
-  return { pages, error };
+  // The list is fetched once per session and never polled, so if a page is
+  // deleted (or unpublished) in the admin while this tab is already open, it
+  // lingers in the sidebar/search until something calls this. The 404 branch
+  // in usePageDetail below calls it to reconcile the stale list.
+  const refresh = React.useCallback(() => setReloadKey((k) => k + 1), []);
+
+  return { pages, error, refresh };
 }
 
 // Full content (incl. blocks) for the currently routed page.
@@ -604,7 +611,7 @@ function SearchOverlay({ open, onClose, pages }) {
 
 window.SCT_App = function App() {
   const route = useHashRoute();
-  const { pages, error: pagesError } = usePageList();
+  const { pages, error: pagesError, refresh: refreshPages } = usePageList();
   const [searchOpen, setSearchOpen] = React.useState(false);
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   React.useEffect(() => { setSidebarOpen(false); }, [route]);
@@ -633,12 +640,19 @@ window.SCT_App = function App() {
   const knownId = pages ? (pages.some(p => p.id === route) ? route : null) : undefined; // undefined while loading
   const { page, status } = usePageDetail(knownId || undefined);
 
+  React.useEffect(() => {
+    // The page list said this id existed, but the live fetch 404'd -- it was
+    // deleted (or unpublished) after the list was loaded. Refresh the list so
+    // the sidebar/search stop showing it.
+    if (status === 'notfound' && knownId) refreshPages();
+  }, [status, knownId, refreshPages]);
+
   let main;
   if (pagesError) {
     main = <div className="page"><h1 className="page-title">Something went wrong</h1><p className="page-lede">{pagesError}</p></div>;
   } else if (!pages) {
     main = <PageSkeleton />;
-  } else if (knownId === null) {
+  } else if (knownId === null || status === 'notfound') {
     main = <PageNotFound id={route} />;
   } else if (status !== 'ready' || !page) {
     main = <PageSkeleton />;

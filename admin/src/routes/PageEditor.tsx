@@ -18,6 +18,7 @@ export function PageEditor({ pageId }: { pageId: string }) {
   const [notice, setNotice] = useState<string | null>(null);
   const [saving, setSaving] = useState<'draft' | 'publish' | null>(null);
   const [duplicating, setDuplicating] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [tab, setTab] = useState<'content' | 'settings' | 'guests'>('content');
   const [showPreview, setShowPreview] = useState(true);
 
@@ -43,8 +44,15 @@ export function PageEditor({ pageId }: { pageId: string }) {
 
   const remove = async () => {
     if (!confirm(`Delete "${page?.title}"? This cannot be undone.`)) return;
-    await adminApi.deletePage(pageId);
-    navigate('/admin/pages');
+    setDeleting(true);
+    setError(null);
+    try {
+      await adminApi.deletePage(pageId);
+      navigate('/admin/pages');
+    } catch (e: any) {
+      setError(e.message || 'Failed to delete page');
+      setDeleting(false);
+    }
   };
 
   const duplicate = async () => {
@@ -168,7 +176,9 @@ export function PageEditor({ pageId }: { pageId: string }) {
       )}
 
       <div className="danger-zone">
-        <button className="btn-danger" onClick={remove}>Delete page</button>
+        <button className="btn-danger" disabled={deleting} onClick={remove}>
+          {deleting ? 'Deleting…' : 'Delete page'}
+        </button>
       </div>
     </div>
   );
