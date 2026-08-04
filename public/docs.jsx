@@ -694,25 +694,52 @@ window.SCT_App = function App() {
 
   React.useEffect(() => {
     if (!isWelcome) {
-      // Reset inline styles on topbar and sidebar when leaving welcome page
+      // Reset inline styles on all elements when leaving welcome page
+      const container = document.querySelector('.homepage-hero-transition-container');
       const topbar = document.querySelector('.topbar');
       const sidebar = document.querySelector('.sidebar');
+      const landingOverlay = document.querySelector('.landing-overlay');
+      if (container) {
+        container.style.transition = '';
+        container.style.top = '';
+        container.style.left = '';
+        container.style.width = '';
+        container.style.height = '';
+        container.style.borderRadius = '';
+        container.style.zIndex = '';
+      }
       if (topbar) {
         topbar.style.opacity = '';
         topbar.style.pointerEvents = '';
+        topbar.style.transition = '';
       }
       if (sidebar) {
         sidebar.style.opacity = '';
         sidebar.style.pointerEvents = '';
+        sidebar.style.transition = '';
       }
+      if (landingOverlay) {
+        landingOverlay.style.opacity = '';
+        landingOverlay.style.transform = '';
+        landingOverlay.style.transition = '';
+      }
+      document.documentElement.classList.remove('hero-entered');
       return;
     }
 
-    // Check support for scroll-driven animations (SDA)
+    // Check support for scroll-driven animations (SDA) — let native CSS handle it
     const supportsSDA = window.CSS && window.CSS.supports && window.CSS.supports('(animation-timeline: scroll()) and (animation-range: 0% 100%)');
-    if (supportsSDA) return;
+    if (supportsSDA) {
+      document.documentElement.classList.remove('hero-entered');
+      return;
+    }
+
+    let hasTriggered = false;
+    let isTransitioning = false;
 
     const onScroll = () => {
+      if (hasTriggered || isTransitioning) return;
+
       const container = document.querySelector('.homepage-hero-transition-container');
       const placeholder = document.querySelector('.homepage-hero-placeholder');
       const topbar = document.querySelector('.topbar');
@@ -721,6 +748,7 @@ window.SCT_App = function App() {
 
       if (!container || !placeholder) return;
 
+      // Capture destination coordinates from the placeholder element
       const rect = placeholder.getBoundingClientRect();
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
@@ -730,48 +758,64 @@ window.SCT_App = function App() {
       const destWidth = rect.width;
       const destHeight = rect.height;
 
-      const scrollY = window.scrollY;
-      const limit = window.innerHeight;
-      const pct = Math.min(1, Math.max(0, scrollY / limit));
+      // Set CSS variables (for potential reuse, also mirrors SDA keyframes)
+      document.documentElement.style.setProperty('--hero-dest-top', `${destTop}px`);
+      document.documentElement.style.setProperty('--hero-dest-left', `${destLeft}px`);
+      document.documentElement.style.setProperty('--hero-dest-width', `${destWidth}px`);
+      document.documentElement.style.setProperty('--hero-dest-height', `${destHeight}px`);
 
-      // Interpolate coordinates
-      const currentTop = destTop * pct;
-      const currentLeft = destLeft * pct;
-      const currentWidth = window.innerWidth + (destWidth - window.innerWidth) * pct;
-      const currentHeight = window.innerHeight + (destHeight - window.innerHeight) * pct;
-      const currentBorderRadius = 10 * pct;
+      // --- Trigger smooth CSS transitions ---
 
-      container.style.top = `${currentTop}px`;
-      container.style.left = `${currentLeft}px`;
-      container.style.width = `${currentWidth}px`;
-      container.style.height = `${currentHeight}px`;
-      container.style.borderRadius = `${currentBorderRadius}px`;
-      container.style.zIndex = pct >= 0.99 ? '1' : '100';
+      // Hero container: shrink from full-screen to placeholder via CSS transition
+      container.style.transition = 'all 0.7s cubic-bezier(0.22, 1, 0.36, 1)';
+      container.style.top = `${destTop}px`;
+      container.style.left = `${destLeft}px`;
+      container.style.width = `${destWidth}px`;
+      container.style.height = `${destHeight}px`;
+      container.style.borderRadius = '10px';
+      container.style.zIndex = '1';
 
-      // Interpolate UI opacities
+      // Topbar and sidebar: fade in slightly after hero starts moving
       if (topbar) {
-        topbar.style.opacity = pct;
-        topbar.style.pointerEvents = pct > 0.1 ? 'auto' : 'none';
+        topbar.style.transition = 'opacity 0.45s ease 0.2s';
+        topbar.style.opacity = '1';
+        topbar.style.pointerEvents = 'auto';
       }
       if (sidebar) {
-        sidebar.style.opacity = pct;
-        sidebar.style.pointerEvents = pct > 0.1 ? 'auto' : 'none';
+        sidebar.style.transition = 'opacity 0.45s ease 0.2s';
+        sidebar.style.opacity = '1';
+        sidebar.style.pointerEvents = 'auto';
       }
 
-      // Interpolate overlay opacity
+      // Landing overlay: fade out and slide up
       if (landingOverlay) {
-        const overlayPct = Math.min(1, Math.max(0, scrollY / (limit * 0.6)));
-        landingOverlay.style.opacity = 1 - overlayPct;
-        landingOverlay.style.transform = `translateY(${-50 * overlayPct}px)`;
+        landingOverlay.style.transition = 'opacity 0.4s ease, transform 0.5s ease';
+        landingOverlay.style.opacity = '0';
+        landingOverlay.style.transform = 'translateY(-30px)';
       }
+
+      hasTriggered = true;
+      isTransitioning = true;
+
+      // Auto-scroll the page to just above the content area
+      setTimeout(() => {
+        window.scrollTo({
+          top: destTop - 40,
+          behavior: 'smooth'
+        });
+      }, 80);
+
+      // Mark transition as complete
+      setTimeout(() => {
+        isTransitioning = false;
+        document.documentElement.classList.add('hero-entered');
+      }, 800);
     };
 
-    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
     return () => {
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      document.documentElement.classList.remove('hero-entered');
     };
   }, [isWelcome]);
 
