@@ -481,6 +481,11 @@ function PageView({ page, pageList }) {
             <img src="welcome-hero.jpg" alt="Sunrise over mountains" fetchpriority="high" />
             <div className="landing-overlay">
               <div className="landing-content">
+                <div className="landing-logo" aria-hidden="true">
+                  <span className="ll s"></span>
+                  <span className="ll c"></span>
+                  <span className="ll t"></span>
+                </div>
                 <h1 className="landing-title">SquareCircleTriangle</h1>
                 <p className="landing-subtitle">Teach what we know. Convene the people who care. Build the tools they need next.</p>
                 <div className="scroll-indicator">
