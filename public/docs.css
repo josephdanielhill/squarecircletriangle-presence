@@ -533,6 +533,18 @@ button { font-family: inherit; }
   }
 }
 
+/* ─── Hero-entered (post-transition) state ─── */
+/* Applied by JS after the smooth transition completes, keeps the
+   hero at its destination so layout doesn't shift. */
+.hero-entered .homepage-hero-transition-container {
+  z-index: 1;
+  border-radius: 10px;
+}
+.hero-entered .landing-overlay {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .breadcrumb {
   display: flex; align-items: center; gap: 6px;
   font-size: 13px;
