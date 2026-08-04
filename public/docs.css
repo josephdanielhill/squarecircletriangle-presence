@@ -446,7 +446,7 @@ button { font-family: inherit; }
 }
 
 .landing-title {
-  font-family: var(--ff-serif);
+  font-family: var(--ff-body);
   font-size: clamp(38px, 6vw, 64px);
   font-weight: 400;
   margin: 0 0 16px;
