@@ -612,6 +612,7 @@ window.SCT_App = function App() {
   const { pages, error: pagesError } = usePageList();
   const [searchOpen, setSearchOpen] = React.useState(false);
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const heroTransitionedRef = React.useRef(false);
   React.useEffect(() => { setSidebarOpen(false); }, [route]);
   React.useEffect(() => {
     document.body.style.overflow = sidebarOpen ? 'hidden' : '';
@@ -682,6 +683,38 @@ window.SCT_App = function App() {
       document.documentElement.style.setProperty('--hero-dest-width', `${destWidth}px`);
       document.documentElement.style.setProperty('--hero-dest-height', `${destHeight}px`);
       document.documentElement.style.setProperty('--hero-limit', `${window.innerHeight}px`);
+
+      // If hero was already transitioned this session, restore entered state instantly
+      if (heroTransitionedRef.current) {
+        const container = document.querySelector('.homepage-hero-transition-container');
+        const topbar = document.querySelector('.topbar');
+        const sidebar = document.querySelector('.sidebar');
+        const landingOverlay = document.querySelector('.landing-overlay');
+
+        if (container) {
+          container.style.top = `${destTop}px`;
+          container.style.left = `${destLeft}px`;
+          container.style.width = `${destWidth}px`;
+          container.style.height = `${destHeight}px`;
+          container.style.borderRadius = '10px';
+          container.style.zIndex = '1';
+        }
+        if (topbar) {
+          topbar.style.opacity = '1';
+          topbar.style.pointerEvents = 'auto';
+        }
+        if (sidebar) {
+          sidebar.style.opacity = '1';
+          sidebar.style.pointerEvents = 'auto';
+        }
+        if (landingOverlay) {
+          landingOverlay.style.opacity = '0';
+          landingOverlay.style.transform = 'translateY(-30px)';
+        }
+        document.documentElement.classList.add('hero-entered');
+        window.scrollTo({ top: destTop - 40, behavior: 'instant' });
+        return;
+      }
     };
 
     // Measure initially and after a short delay to allow layout to settle
@@ -735,7 +768,11 @@ window.SCT_App = function App() {
     // Check support for scroll-driven animations (SDA) — let native CSS handle it
     const supportsSDA = window.CSS && window.CSS.supports && window.CSS.supports('(animation-timeline: scroll()) and (animation-range: 0% 100%)');
     if (supportsSDA) {
-      document.documentElement.classList.remove('hero-entered');
+      if (heroTransitionedRef.current) {
+        document.documentElement.classList.add('hero-entered');
+      } else {
+        document.documentElement.classList.remove('hero-entered');
+      }
       return;
     }
 
@@ -743,7 +780,7 @@ window.SCT_App = function App() {
     let isTransitioning = false;
 
     const onScroll = () => {
-      if (hasTriggered || isTransitioning) return;
+      if (hasTriggered || isTransitioning || heroTransitionedRef.current) return;
 
       const container = document.querySelector('.homepage-hero-transition-container');
       const placeholder = document.querySelector('.homepage-hero-placeholder');
@@ -801,6 +838,7 @@ window.SCT_App = function App() {
 
       hasTriggered = true;
       isTransitioning = true;
+      heroTransitionedRef.current = true;
 
       // Auto-scroll the page to just above the content area
       setTimeout(() => {
