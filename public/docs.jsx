@@ -474,23 +474,6 @@ function PageView({ page, pageList }) {
         ))}
       </nav>
 
-      {page.id === 'welcome' && (
-        <>
-          <div className="homepage-hero-transition-container">
-            <img src="welcome-hero.jpg" alt="Sunrise over mountains" fetchpriority="high" />
-            <div className="landing-overlay">
-              <div className="landing-content">
-                <h1 className="landing-title">SquareCircleTriangle</h1>
-                <p className="landing-subtitle">Teach what we know. Convene the people who care. Build the tools they need next.</p>
-                <div className="scroll-indicator">
-                  <span className="scroll-arrow">↓</span> Scroll to enter
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
-
       {page.eyebrow && <div className="page-eyebrow">{page.eyebrow}</div>}
       <h1 className="page-title">{page.title}</h1>
       {page.lede && (
