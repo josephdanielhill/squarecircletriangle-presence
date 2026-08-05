@@ -386,8 +386,40 @@ button { font-family: inherit; }
   z-index: 2;
 }
 
+/* Landing logo: square, circle, triangle symbols */
+.landing-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+.landing-logo .ll { display: inline-block; }
+.landing-logo .ll.s {
+  width: 32px;
+  height: 32px;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.landing-logo .ll.c {
+  width: 32px;
+  height: 32px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.landing-logo .ll.t {
+  width: 0;
+  height: 0;
+  border-left: 18px solid transparent;
+  border-right: 18px solid transparent;
+  border-bottom: 32px solid #fff;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+}
+
 .landing-title {
-  font-family: var(--ff-serif);
+  font-family: var(--ff-body);
   font-size: clamp(38px, 6vw, 64px);
   font-weight: 400;
   margin: 0 0 16px;
