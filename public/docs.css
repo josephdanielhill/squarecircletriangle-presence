@@ -356,46 +356,19 @@ button { font-family: inherit; }
   }
 }
 
-.homepage-hero-placeholder {
-  width: 100%;
-  height: 220px;
-  margin-bottom: 28px;
-  visibility: hidden;
-}
-@media (max-width: 600px) {
-  .homepage-hero-placeholder {
-    height: 140px;
-  }
-}
-
 .homepage-hero-transition-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  border-radius: 0;
-  z-index: 100;
+  position: relative;
+  width: 100%;
+  height: 50vh;
   overflow: hidden;
   border: 1px solid var(--rule);
+  border-radius: 0;
 }
 .homepage-hero-transition-container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
-}
-
-/* Default initial states on welcome page before scroll */
-.is-welcome-page .topbar {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease;
-}
-.is-welcome-page .sidebar {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease;
 }
 
 /* Landing overlay styling */
@@ -461,89 +434,7 @@ button { font-family: inherit; }
   }
 }
 
-/* Keyframes for native scroll-driven animations */
-@keyframes shrink-hero {
-  0% {
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    border-radius: 0;
-    z-index: 100;
-  }
-  99.9% {
-    z-index: 100;
-  }
-  100% {
-    top: var(--hero-dest-top);
-    left: var(--hero-dest-left);
-    width: var(--hero-dest-width);
-    height: var(--hero-dest-height);
-    border-radius: 10px;
-    z-index: 1;
-  }
-}
 
-@keyframes fade-in-ui {
-  0% {
-    opacity: 0;
-    pointer-events: none;
-  }
-  100% {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-
-@keyframes fade-out-landing {
-  0% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-50px);
-  }
-}
-
-/* Bind scroll-driven animations in supported browsers */
-@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
-  .is-welcome-page .homepage-hero-transition-container {
-    animation: shrink-hero auto linear both;
-    animation-timeline: scroll(block root);
-    animation-range: 0px var(--hero-limit, 100vh);
-  }
-
-  .is-welcome-page .topbar {
-    animation: fade-in-ui auto linear both;
-    animation-timeline: scroll(block root);
-    animation-range: 0px var(--hero-limit, 100vh);
-  }
-
-  .is-welcome-page .sidebar {
-    animation: fade-in-ui auto linear both;
-    animation-timeline: scroll(block root);
-    animation-range: 0px var(--hero-limit, 100vh);
-  }
-
-  .is-welcome-page .landing-overlay {
-    animation: fade-out-landing auto linear both;
-    animation-timeline: scroll(block root);
-    animation-range: 0px calc(var(--hero-limit, 100vh) * 0.6);
-  }
-}
-
-/* ─── Hero-entered (post-transition) state ─── */
-/* Applied by JS after the smooth transition completes, keeps the
-   hero at its destination so layout doesn't shift. */
-.hero-entered .homepage-hero-transition-container {
-  z-index: 1;
-  border-radius: 10px;
-}
-.hero-entered .landing-overlay {
-  opacity: 0;
-  pointer-events: none;
-}
 
 .breadcrumb {
   display: flex; align-items: center; gap: 6px;
