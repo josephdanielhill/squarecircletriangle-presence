@@ -76,11 +76,16 @@ function CardGridView({ block }: { block: CardGridBlockT }) {
 }
 
 function ChangelogTableView({ block }: { block: ChangelogTableBlockT }) {
+  function formatDate(iso: string) {
+    if (!iso) return iso;
+    const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (m) return `${m[3]}.${m[2]}.${m[1]}`;
+    return iso;
+  }
   const entries = [...block.entries].sort((a, b) => {
-    const bTime = Date.parse(b.date);
-    const aTime = Date.parse(a.date);
-    if (isNaN(bTime) || isNaN(aTime)) return 0;
-    return bTime - aTime;
+    if (!a.date) return 1;
+    if (!b.date) return -1;
+    return b.date.localeCompare(a.date);
   });
   return (
     <div className="tbl">
@@ -89,7 +94,7 @@ function ChangelogTableView({ block }: { block: ChangelogTableBlockT }) {
         <tbody>
           {entries.map((entry, i) => (
             <tr key={i}>
-              <td>{entry.date}</td>
+              <td>{formatDate(entry.date)}</td>
               <td>
                 <strong>{entry.title}</strong>
                 <ul>{entry.items.map((item, j) => <li key={j}>{item}</li>)}</ul>

@@ -122,7 +122,7 @@ export function BlockFields({ block, onChange }: { block: Block; onChange: (b: B
           onChange={(entries) => onChange({ ...block, entries })}
           renderItem={(entry, i, update) => (
             <div className="fields-grid">
-              <TextField label="Date" value={entry.date} placeholder="e.g. 03 May 2026" onChange={(date) => update({ ...entry, date })} />
+              <TextField label="Date" value={entry.date} placeholder="e.g. 2026-08-15" onChange={(date) => update({ ...entry, date })} />
               <TextField label="Title" value={entry.title} onChange={(title) => update({ ...entry, title })} />
               <div>
                 <span className="field-label">Change items</span>
