@@ -80,7 +80,7 @@ function ChangelogTableView({ block }: { block: ChangelogTableBlockT }) {
     const bTime = Date.parse(b.date);
     const aTime = Date.parse(a.date);
     if (isNaN(bTime) || isNaN(aTime)) return 0;
-    return aTime - bTime;
+    return bTime - aTime;
   });
   return (
     <div className="tbl">
