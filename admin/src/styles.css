@@ -67,6 +67,9 @@ a { color: inherit; }
 .field-hint { color: var(--admin-muted); font-size: 12.5px; }
 .field-checkbox { display: flex; align-items: center; gap: 8px; }
 .field-checkbox input { width: auto; }
+.field-inline { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.field-inline input[type="checkbox"] { width: auto; margin: 0; }
+.page-meta-fields { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--admin-border); }
 .fields-grid { display: grid; gap: 10px; margin-bottom: 10px; }
 .error-text { color: var(--admin-danger); font-size: 13px; }
 
