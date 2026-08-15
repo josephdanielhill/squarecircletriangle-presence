@@ -45,8 +45,8 @@ export function PageEditor({ pageId }: { pageId: string }) {
     try {
       const updated = await adminApi.updatePage(pageId, {
         title: title.trim() || page?.title,
-        eyebrow: eyebrow || null,
-        lede: lede || null,
+        eyebrow: eyebrow,
+        lede: lede,
         ledeQuote,
         blocks,
         status,
