@@ -20,10 +20,21 @@ export function PageEditor({ pageId }: { pageId: string }) {
   const [duplicating, setDuplicating] = useState(false);
   const [tab, setTab] = useState<'content' | 'settings' | 'guests'>('content');
   const [showPreview, setShowPreview] = useState(true);
+  const [title, setTitle] = useState('');
+  const [eyebrow, setEyebrow] = useState('');
+  const [lede, setLede] = useState('');
+  const [ledeQuote, setLedeQuote] = useState(false);
 
   useEffect(() => {
     setPage(null);
-    adminApi.getPage(pageId).then((p) => { setPage(p); setBlocks(p.blocks || []); }).catch((e) => setError(e.message));
+    adminApi.getPage(pageId).then((p) => {
+      setPage(p);
+      setBlocks(p.blocks || []);
+      setTitle(p.title);
+      setEyebrow(p.eyebrow || '');
+      setLede(p.lede || '');
+      setLedeQuote(p.lede_quote);
+    }).catch((e) => setError(e.message));
     adminApi.listPages().then(setPages).catch(() => {});
     adminApi.listTemplates().then(setTemplates).catch(() => {});
   }, [pageId]);
@@ -32,8 +43,19 @@ export function PageEditor({ pageId }: { pageId: string }) {
     setSaving(status === 'draft' ? 'draft' : 'publish');
     setError(null);
     try {
-      const updated = await adminApi.updatePage(pageId, { blocks, status });
+      const updated = await adminApi.updatePage(pageId, {
+        title: title.trim() || page?.title,
+        eyebrow: eyebrow || null,
+        lede: lede || null,
+        ledeQuote,
+        blocks,
+        status,
+      });
       setPage(updated);
+      setTitle(updated.title);
+      setEyebrow(updated.eyebrow || '');
+      setLede(updated.lede || '');
+      setLedeQuote(updated.lede_quote);
     } catch (e: any) {
       setError(e.message || 'Failed to save');
     } finally {
@@ -132,6 +154,28 @@ export function PageEditor({ pageId }: { pageId: string }) {
               <span>Content</span>
               {!showPreview && <button className="btn-link" onClick={() => setShowPreview(true)}>Show preview</button>}
             </div>
+            <div className="page-meta-fields">
+              <label className="field">
+                <span className="field-label">Title</span>
+                <input className="field-input" type="text" value={title}
+                       onChange={(e) => setTitle(e.target.value)} />
+              </label>
+              <label className="field">
+                <span className="field-label">Eyebrow (optional)</span>
+                <input className="field-input" type="text" value={eyebrow}
+                       onChange={(e) => setEyebrow(e.target.value)} />
+                <span className="field-hint">Small label shown above the title.</span>
+              </label>
+              <label className="field">
+                <span className="field-label">Lede / Sub-heading (optional)</span>
+                <textarea className="field-textarea" rows={2} value={lede}
+                          onChange={(e) => setLede(e.target.value)} />
+              </label>
+              <label className="field field-inline">
+                <input type="checkbox" checked={ledeQuote} onChange={(e) => setLedeQuote(e.target.checked)} />
+                <span>Render lede as a blockquote</span>
+              </label>
+            </div>
             <div className="template-toolbar">
               <select className="field-input" value={selectedTemplateId} onChange={(e) => setSelectedTemplateId(e.target.value)}>
                 <option value="">Apply a template…</option>
@@ -151,7 +195,13 @@ export function PageEditor({ pageId }: { pageId: string }) {
                 <button className="btn-link" onClick={() => setShowPreview(false)}>Hide</button>
               </div>
               <div className="prose preview-prose">
-                <h1 className="page-title">{page.title}</h1>
+                {eyebrow && <div className="page-eyebrow">{eyebrow}</div>}
+                <h1 className="page-title">{title || page.title}</h1>
+                {lede && (
+                  ledeQuote
+                    ? <blockquote className="page-lede-quote">{lede}</blockquote>
+                    : <p className="page-lede">{lede}</p>
+                )}
                 <BlockRenderer blocks={blocks} pages={pages} pageId={pageId} />
               </div>
             </div>
